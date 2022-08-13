@@ -1,4 +1,4 @@
-# 1 工程简介
+# 1 Kaptcha简介
 
 Kaptcha是Google提供的一个图形验证码插件，可以从官网 https://code.google.com/p/kaptcha/ 了解更多的详情。它的源代码是公开的，在上面的官网提供的download项，可以下载一个zip包，里面包含了jar包和源代码。
 
