@@ -10,8 +10,9 @@
   * [Springboot 整合 Mail](./Springboot/Springboot_Mail.md)
 
 
-- 文件夹 2
-- * [测试文件2_1](./folder_2/file2_1.md)
-- * [测试文件2_2](./folder_2/file2_2.md)
+ * 参考文档
+   * [16个Redis常见使用场景](./ReferenceDoc/16个Redis常见使用场景.md)
+   * [Redis学习笔记](./ReferenceDoc/Redis_study_notes.md)
+
 
 * [404](404.md)
