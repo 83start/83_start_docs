@@ -7,6 +7,7 @@
   * [Springboot 整合 七牛云Kodo](./Springboot/Springboot_Qiniu_Kodo.md)
   * [Springboot 整合 阿里云SMS](./Springboot/Springboot_Alicloud_Sms.md)
   * [Springboot 整合 Kaptcha](./Springboot/Springboot_Kaptcha.md)
+  * [Springboot 整合 mail](./Springboot/Springboot_Mail.md)
 
 
 - 文件夹 2
