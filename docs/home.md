@@ -24,3 +24,10 @@ MySQL、RabbitMQ、Redis、Mongodb、Elasticsearch
 
 ## 邮箱
 <a href="mailto:1308129550@qq.com">1308129550@qq.com</a>
+
+
+# License
+
+[MIT](https://github.com/83start)
+
+Copyright (c) 2022-present 83start
