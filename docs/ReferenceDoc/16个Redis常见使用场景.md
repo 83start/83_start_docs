@@ -1,216 +1,385 @@
-### 1、缓存
+# 1 简介
+Git 是分布式版本控制系统，没有中央控制器，每个人的电脑就可以拥有一个完整的版本库，工作的时候不需要联网。协同的方法：A和B 都修改了文件 hello.java，只需要将各自的修改推送给对方，就可以互相看到对方的修改。Git 可以直接看到更新了哪些代码和文件。
 
-String类型
+**Git是目前世界上最先进的分布式版本控制系统。**
 
-例如：热点数据缓存（例如报表、明星出轨），对象缓存、全页缓存、可以提升热点数据的访问数据。
+# 2 Git 历史
 
-### 2、数据共享分布式
+Linux和Git之父李纳斯·托沃兹（Linus Benedic Torvalds）1969、芬兰。
 
-String 类型，因为 Redis 是分布式的独立服务，可以在多个应用之间共享
+Git是免费、开源的，最初Git是为辅助 Linux 内核开发的，来替代 BitKeeper！
 
-例如：分布式Session
+# 3 安装Git
 
-```
-<dependency> 
- <groupId>org.springframework.session</groupId> 
- <artifactId>spring-session-data-redis</artifactId> 
-</dependency>
-```
+## 3.1 下载
 
-### 3、分布式锁
+国外：
 
-String 类型setnx方法，只有不存在时才能添加成功，返回true
+[https://git-scm.com/downloads](https://git-scm.com/downloads)
 
-```
-public static boolean getLock(String key) {
-    Long flag = jedis.setnx(key, "1");
-    if (flag == 1) {
-        jedis.expire(key, 10);
-    }
-    return flag == 1;
-}
+淘宝镜像：
 
-public static void releaseLock(String key) {
-    jedis.del(key);
-}
-```
+[http://npm.taobao.org/mirrors/git-for-windows/](http://npm.taobao.org/mirrors/git-for-windows/)
 
-### 4、全局ID
+## 3.2 卸载
 
-int类型，incrby，利用原子性
+1. 卸载软件
+![image_4.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456136.png)
 
-incrby userid 1000
+![image_5.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456089.png)
 
-分库分表的场景，一次性拿一段
+2. 清理path
+![image_6.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456007.png)
 
-### 5、计数器
+![image_7.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456052.png)
 
-int类型，incr方法
+![image_8.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456074.png)
 
-例如：文章的阅读量、微博点赞数、允许一定的延迟，先写入Redis再定时同步到数据库
+## 3.3 安装
 
-### 6、限流
+## 3.4 启动Git
 
-int类型，incr方法
+安装成功后在开始菜单中会有Git项，菜单下有3个程序：任意文件夹下右键也可以看到对应的程序！![image_10.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456104.png)
 
-以访问者的ip和其他信息作为key，访问一次增加一次计数，超过次数则返回false
+![image_9.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456240.png)
 
-### 7、位统计
+**Git Bash ：**Unix与Linux风格的命令行，**使用最多，推荐最多**
+**Git CMD ：**Windows风格的命令行
+**Git GUI：**图形界面的Git，不建议初学者使用，尽量先熟悉常用命令
 
-String类型的bitcount（1.6.6的bitmap数据结构介绍）
+# 4 常用的Linux 命令（补充）
 
-字符是以8位二进制存储的
-
-```
-set k1 a
-setbit k1 6 1
-setbit k1 7 0
-get k1 
-/* 6 7 代表的a的二进制位的修改
-a 对应的ASCII码是97，转换为二进制数据是01100001
-b 对应的ASCII码是98，转换为二进制数据是01100010
-
-因为bit非常节省空间（1 MB=8388608 bit），可以用来做大数据量的统计。
-*/
+```bash
+cd : 改变目录。
+cd .. : 回退到上一个目录，直接cd进入默认目录
+pwd : 显示当前所在的目录路径。
+ls(ll):  都是列出当前目录中的所有文件，只不过ll(两个ll)列出的内容更为详细。
+touch : 新建一个文件 如 touch index.js 就会在当前目录下新建一个index.js文件。
+rm:  删除一个文件, rm index.js 就会把index.js文件删除。
+mkdir:  新建一个目录,就是新建一个文件夹。
+rm -r :  删除一个文件夹, rm -r src 删除src目录
+mv : 移动文件, mv index.html src index.html 是我们要移动的文件, src 是目标文件夹,当然, 这样写,必须保证文件和目标文件夹在同一目录下。
+reset : 重新初始化终端/清屏。
+clear : 清屏。
+history : 查看命令历史。
+help : 帮助。
+exit : 退出。
+#表示注释
 ```
 
-例如：在线用户统计，留存用户统计
+# 5 Git 配置文件
+## 5.1查看配置文件信息
+**查看所有的配置文件：**
 
-```
-setbit onlineusers 01 
-setbit onlineusers 11 
-setbit onlineusers 20
-```
-
-支持按位与、按位或等等操作
-
-```
-BITOPANDdestkeykey[key...] ，对一个或多个 key 求逻辑并，并将结果保存到 destkey 。       
-BITOPORdestkeykey[key...] ，对一个或多个 key 求逻辑或，并将结果保存到 destkey 。 
-BITOPXORdestkeykey[key...] ，对一个或多个 key 求逻辑异或，并将结果保存到 destkey 。 
-BITOPNOTdestkeykey ，对给定 key 求逻辑非，并将结果保存到 destkey 。
+```YAML
+git config -l
 ```
 
-计算出7天都在线的用户
+![image_10.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456136.png)
 
-```
-BITOP "AND" "7_days_both_online_users" "day_1_online_users" "day_2_online_users" ...  "day_7_online_users"
-```
+**查看系统配置文件：（筛选）**
 
-### 8、购物车
-
-String 或hash。所有String可以做的hash都可以做
-
-[![图片](https://halo-83-start.oss-cn-shenzhen.aliyuncs.com/file/image/202202271435887.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541601&idx=2&sn=c377f8b82661e300243c5482121d3c0d&chksm=9bd38ef9aca407ef06b35bec51961f3cfc51ddd35a01361c80ccc30d16513bdf8a5eaa07ec03&scene=21#wechat_redirect)
-
-- key：用户id；field：商品id；value：商品数量。
-- +1：hincr。-1：hdecr。删除：hdel。全选：hgetall。商品数：hlen。
-
-### 9、用户消息时间线timeline
-
-list，双向链表，直接作为timeline就好了。插入有序
-
-### 10、消息队列
-
-List提供了两个阻塞的弹出操作：blpop/brpop，可以设置超时时间
-
-- blpop：blpop key1 timeout 移除并获取列表的第一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
-- brpop：brpop key1 timeout 移除并获取列表的最后一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
-
-上面的操作。其实就是java的阻塞队列。学习的东西越多。学习成本越低
-
-- 队列：先进先除：rpush blpop，左头右尾，右边进入队列，左边出队列
-- 栈：先进后出：rpush brpop
-
-
-
-### 11、抽奖
-
-自带一个随机获得值
-
-```
-spop myset
+```YAML
+git config --system --list
 ```
 
-### 12、点赞、签到、打卡
+![image_11.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456287.png)
 
-[![图片](https://halo-83-start.oss-cn-shenzhen.aliyuncs.com/file/image/202202271435659.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541601&idx=3&sn=1096a699699983bc3e549cc8ddc83496&chksm=9bd38ef9aca407ef7499f337ced6e2e2b4b1ff4e62bc7a9ba4da5db38e360f7e764856707ca5&scene=21#wechat_redirect)
+查看当前用户（global）配置：
 
-假如上面的微博ID是t1001，用户ID是u3001
-
-用 like:t1001 来维护 t1001 这条微博的所有点赞用户
-
-- 点赞了这条微博：sadd like:t1001 u3001
-- 取消点赞：srem like:t1001 u3001
-- 是否点赞：sismember like:t1001 u3001
-- 点赞的所有用户：smembers like:t1001
-- 点赞数：scard like:t1001
-
-是不是比数据库简单多了。
-
-### 13、商品标签
-
-[![图片](https://halo-83-start.oss-cn-shenzhen.aliyuncs.com/file/image/202202271435665.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541518&idx=4&sn=312ae7c4cd919f9dde8d7965afc806e0&chksm=9bd38e96aca40780a0a4e122ea7fc93c16f52eddf270e20231aa7ddb3ac1e40050d94db004cc&scene=21#wechat_redirect)
-
-老规矩，用 tags:i5001 来维护商品所有的标签。
-
-- sadd tags:i5001 画面清晰细腻
-- sadd tags:i5001 真彩清晰显示屏
-- sadd tags:i5001 流程至极
-
-### 14、商品筛选
-
-```
-// 获取差集
-sdiff set1 set2
-// 获取交集（intersection ）
-sinter set1 set2
-// 获取并集
-sunion set1 set2
+```YAML
+git config --global  --list
 ```
 
-[![图片](https://halo-83-start.oss-cn-shenzhen.aliyuncs.com/file/image/202202271435680.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541518&idx=4&sn=312ae7c4cd919f9dde8d7965afc806e0&chksm=9bd38e96aca40780a0a4e122ea7fc93c16f52eddf270e20231aa7ddb3ac1e40050d94db004cc&scene=21#wechat_redirect)
+![image_12.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456249.png)
 
-假如：iPhone11 上市了
+## 5.2 查看配置文件位置
 
+系统配置文件：
+
+`Git\etc\gitconfig ` ：Git 安装目录下的 gitconfig
+
+全局（用户）配置文件：
+
+`C:\Users\[Administrator]\ .gitconfig`    只适用于当前登录用户的配置 
+
+这里可以直接编辑配置文件，通过命令设置后会响应到这里。
+
+## 5.2设置用户配置文件
+
+**当你安装Git后首先要做的事情是设置你的用户名称和e-mail地址。这是非常重要的，因为每次Git提交都会使用该信息。**它被永远的嵌入到了你的提交中。
+
+只需要做一次这个设置，如果你传递了--global 选项，因为Git将总是会使用该信息来处理你在系统中所做的一切操作。如果你希望在一个特定的项目中使用不同的名称或e-mail地址，你可以在该项目中运行该命令而不要--global选项。总之--global为全局配置，不加为某个项目的特定配置。
+
+```YAML
+git config --global user.name "caojun"  #名称
+git config --global user.email 1308129550@qq.com   #邮箱
 ```
-sadd brand:apple iPhone11
 
-sadd brand:ios iPhone11
+# 6 Git 理论（重要）
+## 6.1 工作区域
 
-sad screensize:6.0-6.24 iPhone11
+**Git本地有三个工作区域：**
 
-sad screentype:lcd iPhone 11
+`工作目录（Working Directory）：`平时存放项目代码的地方。
+
+`暂存区(Stage/Index)：`用于临时存放你的改动，事实上它只是一个文件，保存即将提交到文件列表信息。
+
+`资源库(Repository或Git Directory)：`仓库区（或本地仓库），就是安全存放数据的位置，这里面有你提交到所有版本的数据。其中HEAD指向最新放入仓库的版本。
+
+**Git远程的区域：**
+
+`仓库(Remote Directory)：`托管代码的服务器，可以简单的认为是你项目组中的一台电脑用于远程数据交换。
+
+**文件在这四个区域之间的转换关系如下：**
+
+![image_13.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456475.png)
+
+## 6.2 工作流程
+
+1. 在工作目录中添加、修改文件；
+2. 将需要进行版本管理的文件放入暂存区域；
+3. 将暂存区域的文件提交到git仓库。
+
+**git管理的文件有三种状态：已修改（modified）,已暂存（staged）,已提交(committed)**
+
+![image_14.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456779.png)
+
+## 6.3 常用指令
+
+![image_15.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456188.png)
+
+# 7 Git项目搭建
+
+## 7.1 创建工作目录
+
+工作目录（WorkSpace)一般就是你希望Git帮助你管理的文件夹，可以是你项目的目录，也可以是一个空目录，建议不要有中文。
+
+## 7.2 本地搭建项目
+1. 创建全新的仓库，需要用GIT管理的项目的根目录执行：
+
+   ```YAML
+   # 在当前目录新建一个Git代码库
+       
+   $ git init
+   ```
+
+2. 执行后可以看到，仅仅在项目目录多出了一个.git目录，关于版本等的所有信息都在这个目录里面。
+
+## 7.3 拷贝远程仓库
+
+1. 克隆远程目录，由于是将远程服务器上的仓库完全镜像一份至本地！
+
+   ```YAML
+   # 克隆一个项目和它的整个代码历史(版本信息)
+   
+   $ git clone [url]  # https://gitee.com/kuangstudy/openclass.git
+   ```
+
+2. 项目目录中出现了完整的克隆项目。
+
+# 8 Git 的文件操作
+
+## 8.1 文件的四种状态
+
+版本控制就是对文件的版本控制，要对文件进行修改、提交等操作，首先要知道文件当前在什么状态，不然可能会提交了现在还不想提交的文件，或者要提交的文件没提交上。
+
+- Untracked: 未跟踪, 此文件在文件夹中, 但并没有加入到git库, 不参与版本控制. 通过git add 状态变为Staged.
+- Unmodify: 文件已经入库, 未修改, 即版本库中的文件快照内容与文件夹中完全一致. 这种类型的文件有两种去处, 如果它被修改, 而变为Modified. 如果使用git rm移出版本库, 则成为Untracked文件
+- Modified: 文件已修改, 仅仅是修改, 并没有进行其他的操作. 这个文件也有两个去处, 通过git add可进入暂存staged状态, 使用git checkout 则丢弃修改过, 返回到unmodify状态, 这个git checkout即从库中取出文件, 覆盖当前修改 !
+- Staged: 暂存状态. 执行git commit则将修改同步到库中, 这时库中的文件和本地文件又变为一致, 文件为Unmodify状态. 执行git reset HEAD filename取消暂存, 文件状态为Modified
+
+## 8.2 查看文件的状态
+
+上面说文件有4种状态，通过如下命令可以查看到文件的状态：
+
+```PowerShell
+#查看指定文件状态
+git status [filename]
+
+#查看所有文件状态
+git status
 ```
 
-赛选商品，苹果的、ios的、屏幕在6.0-6.24之间的，屏幕材质是LCD屏幕
+## 8.3 忽略文件
 
+有些时候我们不想把某些文件纳入版本控制中，比如数据库文件，临时文件，设计文件等
+
+在主目录下建立".gitignore"文件，此文件有如下规则：
+
+1. 忽略文件中的空行或以井号（#）开始的行将会被忽略。
+2. 可以使用Linux通配符。例如：星号（*）代表任意多个字符，问号（？）代表一个字符，方括号（[abc]）代表可选字符范围，大括号（{string1,string2,...}）代表可选的字符串等。
+3. 如果名称的最前面有一个感叹号（!），表示例外规则，将不被忽略。
+4. 如果名称的最前面是一个路径分隔符（/），表示要忽略的文件在此目录下，而子目录中的文件不忽略。
+5. 如果名称的最后面是一个路径分隔符（/），表示要忽略的是此目录下该名称的子目录，而非文件（默认文件或目录都忽略）。
+
+```PowerShell
+#为注释
+*.txt        #忽略所有 .txt结尾的文件,这样的话上传就不会被选中！
+
+!lib.txt     #但lib.txt除外
+
+/temp        #仅忽略项目根目录下的TODO文件,不包括其它目录temp
+
+build/       #忽略build/目录下的所有文件
+
+doc/*.txt    #会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
 ```
-sinter brand:apple brand:ios screensize:6.0-6.24 screentype:lcd
+
+```JavaScript
+# 通用
+*.class
+*.log
+*.lock
+temp/
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+*velocity.log*
+.idea
+.classpath
+.project
+.settings/
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# rebel
+*rebel.xml*
 ```
 
-### 15、用户关注、推荐模型
+![](upload/2022/01/-dcfc66984ae64bc79ff340f8a89f33b7.gitignore)
 
-follow 关注 fans 粉丝
+# 9 使用远程仓库
 
-相互关注：
+## 9.1 生成.ssh
 
-- sadd 1:follow 2
-- sadd 2:fans 1
-- sadd 1:fans 2
-- sadd 2:follow 1
+[https://gitee.com/help/articles/4181#article-header0](https://gitee.com/help/articles/4181#article-header0)
 
-我关注的人也关注了他(取交集)：
+**生成sshkey**
 
-- sinter 1:follow 2:fans
+```JavaScript
+ssh-keygen -t ed25519 -C "1308129550@qq.com"  
+```
 
-可能认识的人：
 
-- 用户1可能认识的人(差集)：sdiff 2:follow 1:follow
-- 用户2可能认识的人：sdiff 1:follow 2:follow
+> 注意：这里的 `xxxxx@xxxxx.com` 只是生成的 sshkey 的名称，并不约束或要求具体命名为某个邮箱。
+> 现网的大部分教程均讲解的使用邮箱生成，其一开始的初衷仅仅是为了便于辨识所以使用了邮箱。
 
-### 16、排行榜
+![image_16.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456374.png)
 
-id 为6001 的新闻点击数加1：`zincrby hotNews:20190926 1 n6001`
+**查看sshkey**
 
-获取今天点击最多的15条：`zrevrange hotNews:20190926 0 15 withscores`
+![image_17.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456357.png)
+
+![image_18.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456369.png)
+
+## 9.2 Gitee添加公钥
+
+**添加公钥**
+![image_19.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456594.png)
+
+![image_20.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456329.png)
+
+![image_21.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456315.png)
+
+**测试代码**
+
+添加后，在终端（Terminal）中输入
+
+```JavaScript
+ssh -T git@gitee.com
+```
+![image_22.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456480.png)
+
+## 9.3 Github添加公钥
+
+**添加公钥**
+
+![image_23.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456532.png)
+
+![image_24.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456543.png)
+
+![image_25.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456780.png)
+
+**测试代码**
+
+```JavaScript
+ssh -T git@github.com
+```
+![image_26.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456476.png)
+
+# 10 分支
+
+## 10.1 概述
+
+分支在GIT中相对较难，分支就是科幻电影里面的平行宇宙，如果两个平行宇宙互不干扰，那对现在的你也没啥影响。不过，在某个时间点，两个平行宇宙合并了，我们就需要处理一些问题了！
+
+![image_27.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456309.png)
+
+![image_28.png](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208141456429.png)
+
+## 10.2 命令
+
+```JavaScript
+# 列出所有本地分支
+git branch
+ 
+# 列出所有远程分支
+git branch -r
+ 
+# 新建一个分支，但依然停留在当前分支
+git branch [branch-name]
+ 
+# 新建一个分支，并切换到该分支
+git checkout -b [branch]
+ 
+# 合并指定分支到当前分支
+$ git merge [branch]
+ 
+# 删除分支
+$ git branch -d [branch-name]
+ 
+# 删除远程分支
+$ git push origin --delete [branch-name]
+$ git branch -dr [remote/branch]
+```
+
+
+如果同一个文件在合并分支时都被修改了则会引起冲突：解决的办法是我们可以修改冲突文件后重新提交！选择要保留他的代码还是你的代码！
+
+master主分支应该非常稳定，用来发布新版本，一般情况下不允许在上面工作，工作一般情况下在新建的dev分支上工作，工作完后，比如上要发布，或者说dev分支代码稳定后可以合并到主分支master上来。
