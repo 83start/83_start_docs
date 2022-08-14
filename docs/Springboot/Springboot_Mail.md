@@ -1,4 +1,3 @@
-# Springboot 整合 Mail
 
 ## 1 项目简介
 Spring Boot也对JavaMail进行了封装简化。

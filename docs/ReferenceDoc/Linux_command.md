@@ -1,12 +1,3 @@
----
-title: Linux 常用命令
-date: 2022-06-15 01:23:56.85
-updated: 2022-06-15 01:23:56.85
-url: /archives/linux-chang-yong-ming-ling
-categories: 
-tags: 
----
-
 ### 1、列举文件 list
 
 就是 list 的缩写，通过 ls 命令不仅可以查看 linux 文件夹包含的文件，而且可以查看文件权限(包括目录、文件夹、文件权限)查看目录信息等等。

@@ -1,15 +1,3 @@
----
-title: Markdown 的参考文档-markdownde-can-kao-wen-dang.md
-date: 2022-05-04 22:07:33.086
-updated: 2022-06-15 01:26:16.89
-url: /archives/markdown的参考文档-markdownde-can-kao-wen-dangmd
-categories: 
-tags: 
----
-
-
-
----
 
 我们理解您需要更便捷更高效的工具记录思想，整理笔记、知识，并将其中承载的价值传播给他人，**Cmd Markdown** 是我们给出的答案 —— 我们为记录思想和分享知识提供更专业的工具。 您可以使用 Cmd Markdown：
 

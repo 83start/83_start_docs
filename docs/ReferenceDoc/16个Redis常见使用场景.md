@@ -1,14 +1,3 @@
----
-title: 16个Redis常见使用场景
-date: 2022-06-15 00:50:51.185
-updated: 2022-06-15 00:51:39.919
-url: /archives/16个redis常见使用场景
-categories: 
-- Database
-tags: 
-- Redis
----
-
 ### 1、缓存
 
 String类型
