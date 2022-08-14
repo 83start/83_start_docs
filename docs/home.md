@@ -1,4 +1,4 @@
-<h1> <img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/doc_32.svg"/> &nbsp;&nbsp;83start_docs</h1>
+# <h1> <img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/doc_32.svg"/> &nbsp;&nbsp;83start_docs</h1> <!-- {docsify-ignore-all} -->
 
 # 常用技术栈
 ## 前端技术
