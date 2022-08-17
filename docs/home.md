@@ -14,7 +14,7 @@ MySQL、RabbitMQ、Redis、Mongodb、Elasticsearch
 
 # 联系
 ## Blog
-<img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/halo_16.png" width = "16px"/> Helo_Blog: [83_blog](http://120.79.2.168:8090/)
+<img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/halo_16.png" width = "16px"/> Halo_Blog: [http://120.79.2.168:8090](http://120.79.2.168:8090/)
 
 
 ## Git仓库
@@ -22,8 +22,15 @@ MySQL、RabbitMQ、Redis、Mongodb、Elasticsearch
 
 <img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/github_16.svg"/> github: [https://github.com/83start](https://github.com/83start)
 
+## Others
+
+<img src="https://cdn.jsdelivr.net/gh/83start/83_start_images@main/202208171641502.svg" alt="can_circle" style="zoom:3%;" />Alist：[http://120.79.2.168:5244](http://120.79.2.168:5244)
+
+<img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208171644382.jpg" alt="logo" style="zoom:2%;" />Nav：[http://120.79.2.168](http://120.79.2.168)
+
+
 ## 邮箱
-<a href="mailto:1308129550@qq.com">1308129550@qq.com</a>
+<img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/mail_16.svg" style="zoom:170%;" /><a href="mailto:1308129550@qq.com">1308129550@qq.com</a>
 
 
 # License
