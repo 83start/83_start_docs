@@ -2,14 +2,13 @@
 
 # 常用技术栈
 ## 前端技术
-vue-cli、vue-router、vuex、axios
+html5、CSS3、JavaScript、vue-cli、vue-router、vuex、axios
 
 ## 后端技术
-Springboot、springcloud alibaba、mybaits
+Springboot、mybaits
 
 ## 数据库
-MySQL、RabbitMQ、Redis、Mongodb、Elasticsearch
-
+MySQL、Redis
 
 
 # 联系
