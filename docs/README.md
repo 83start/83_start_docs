@@ -102,8 +102,24 @@ docsify serve docs
 
 ```javascript
 // 为 el 指定 html 标签
-el: '#main',
+window.$docsify = {
+  el: '#main',
+};
 ```
+
+### 6.2  设置github地址
+
+```bash
+window.$docsify = {
+  repo: 'docsifyjs/docsify',
+  // or
+  repo: 'https://github.com/docsifyjs/docsify/',
+};
+```
+
+
+
+
 
 ## 7 部署项目
 
@@ -131,4 +147,6 @@ el: '#main',
 
    > 默认采用 `README.md` 作为首页
 
-	![image-20220817203332544](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208172033630.png)
+	![](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208172033630.png)
+	
+	
