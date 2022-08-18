@@ -1,3 +1,5 @@
+# Springboot 整合 JPA
+
 ## 1 参考资料
 
 1. [Spring Boot(三)：Spring Boot Jpa的介绍及Jpa的使用](http://t.csdn.cn/XH5sv)
@@ -8,19 +10,19 @@
 6. [Spring Data JPA 进阶（自定义查询，原生 SQL 查询）](https://blog.csdn.net/chaotiantian/article/details/115933280)
 7. [Jpa 实体类常用注解](http://t.csdn.cn/UgWmF)
 
-## 2 Springboot Jpa简介
+## 2 Springboot JPA简介
 
-### 2.1 什么是Jpa
+### 2.1 什么是JPA
 
 JPA顾名思义就是Java Persistence API的意思，是JDK 5.0注解或XML描述对象－关系表的映射关系，并将运行期的实体对象持久化到数据库中。Jpa 是一套规范，不是一套产品。
 
 Jpa (Java Persistence API) 是 Sun 官方提出的 Java 持久化规范。它为 Java 开发人员提供了一种对象/关联映射工具来管理 Java 应用中的关系数据。它的出现主要是为了简化现有的持久化开发工作和整合 ORM 技术，结束现在 Hibernate，TopLink，JDO 等 ORM 框架各自为营的局面。Jpa是在充分吸收了现有 Hibernate，TopLink，JDO 等 ORM 框架的基础上发展而来的，具有易于使用，伸缩性强等优点。从目前的开发社区的反应上看，Jpa 受到了极大的支持和赞扬，其中就包括了 Spring 与 EJB3. 0的开发团队。
 
-### 2.2 什么是Springboot Jpa
+### 2.2 什么是Springboot JPA
 
 Spring Boot Jpa 是 Spring 基于 ORM 框架、Jpa 规范的基础上封装的一套 Jpa 应用框架，可使开发者用极简的代码即可实现对数据的访问和操作。它提供了包括增删改查等在内的常用功能，且易于扩展！学习并使用 Spring Data Jpa 可以极大提高开发效率！
 
-## 3 Springboot 整合 Jpa
+## 3 Springboot 整合 JPA
 
 ### 3.1 创建项目
 
@@ -28,7 +30,18 @@ Spring Boot Jpa 是 Spring 基于 ORM 框架、Jpa 规范的基础上封装的�
 2. Springboot 的版本为 `2.1.17.RELEASE`
 3. 项目的名称为 `Springboot-Jpa`
 
-### 3.2 导入Maven依赖
+### 3.2 文件结构
+
+![image-20220819010729193](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208190107264.png)
+
+1. dao：dao/Repository层
+2. pojo：pojo/entity（实体类）
+3. service：服务类接口
+   - impl：服务类实现类
+4. test：测试方法
+5. resources：配置文件
+
+### 3.3 导入Maven依赖
 
 ```xml
 <!-- 👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇引用常用的依赖👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇👇 -->
@@ -72,7 +85,7 @@ Spring Boot Jpa 是 Spring 基于 ORM 框架、Jpa 规范的基础上封装的�
 <!-- 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆引用常用的依赖👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆 -->
 ```
 
-### 3.3 编写配置文件
+### 3.4 编写配置文件
 
 > 由于使用了spring-boot开发，spring-boot能够减轻我们在XML文件中繁琐的配置，因此在spring-boot中配置JPA也格外简单。
 
@@ -140,100 +153,102 @@ server:
 - `spring.jpa.hibernate.ddl-auto=update`：`jpa`是一套规范，而如`hibernate`仅是基于`jpa`的一套产品。开启update，hibernate可以根据`Entity`属性自动创建数据库，如果想要手动创建表结构，就不要配置`auto=update`
 - `spring.datasource.url`：`datasource`下的`url`数据库连接在`数据库名`后面一定要拼接`?characterEncoding=utf-8`，目的是避免调用JPA的方法存入数据库中的数据**中文乱码**
 
-### 3.4 自动创建数据表
+### 3.5 自动创建数据表
 
 > `hibernate` 是`jpa` 的一套产品。`hibernate` 可以根据 `Entity/Pojo` 实体类自动创建数据库，`Jpa`也是可以使用的。
 >
 > - 需要在配置文件`application.yml` 中开启`spring.jpa.hibernate.ddl-auto=update`。
 > - JPA不能自动创建数据库，数据库需要手动创建。
 
-1. 修改配置文件(application.properties)
+#### 3.5.1 修改配置文件
 
-   ```xml
-   spring.jpa.properties.hibernate.hbm2ddl.auto=update
-   ```
+以`application.properties`为例
 
-2. 创建实体类
+```xml
+spring.jpa.properties.hibernate.hbm2ddl.auto=update
+```
 
-   ```java
-   package com.test.springboot.jpa.pojo;
-   
-   import lombok.Data;
-   import org.springframework.data.annotation.CreatedDate;
-   import org.springframework.data.annotation.LastModifiedDate;
-   import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-   import org.springframework.format.annotation.DateTimeFormat;
-   
-   import javax.persistence.*;
-   import java.io.Serializable;
-   import java.util.Date;
-   
-   /**
-    * @author thinkpad - 83start
-    * @version v1.0
-    * @create 2022/8/18 2:24
-    * @package com.test.springboot.jpa.pojo
-    * @description 根据实体类自动创建 表
-    *              Java类型和对应的表属性关系
-    *              JPA 常见注解 和 操作
-    */
-   
-   @Entity //指定当前类是实体类，对应数据库中的一个表
-   @Data
-   @Table(name = "tb_create_table")
-   @EntityListeners(AuditingEntityListener.class)// 封装生成自动时间
-   public class CreateTable implements Serializable {
-       @Id
-       @GeneratedValue(strategy = GenerationType.IDENTITY) // 设定主键生成策略：IDENTITY 表示由数据库自动生成
-       private Long id; // Long 对应 MySQL 数据库的 bigint 类型
-   
-       @Column(name = "string_value",nullable = false,unique = true,length = 20) //  不为空，唯一，且字符最大长度为 20
-       private String stringValue; // String 对应 MySQL 数据库中的 varchar 类型
-   
-       @Column(name = "integer_value")
-       private Integer integerValue = 3; // 赋值默认值
-   
-       @Column(name = "double_value")
-       private Double doubleValue;
-   
-       /**
-        * 自动生成时间：create 生效
-        */
-       @CreatedDate
-       @Column(name = "create_time")
-       @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 定义时间格式
-       private Date createTime;
-   
-       /**
-        * 自动生成时间：update 生效
-        */
-       @LastModifiedDate
-       @Column(name = "update_time")
-       @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 定义时间格式
-       private Date updateTime;
-   
-       @Transient //如果你想要Entity中的某个属性不被识别为表字段，可以用@Transient注解标记。
-       private String transientValue;
-   }
-   ```
+#### 3.5.2 创建实体类
 
-3. 重启 Springboot 项目
+```java
+package com.test.springboot.jpa.pojo;
 
-   重新启动项目，就会自动生成数据库表。
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
-   ![image-20220818222135196](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208182221355.png)
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
-### 3.5 编写实体类
+/**
+ * @author thinkpad - 83start
+ * @version v1.0
+ * @create 2022/8/18 2:24
+ * @package com.test.springboot.jpa.pojo
+ * @description 根据实体类自动创建 表
+ *              Java类型和对应的表属性关系
+ *              JPA 常见注解 和 操作
+ */
 
-> 实体类于数据库相对应。
+@Entity //指定当前类是实体类，对应数据库中的一个表
+@Data
+@Table(name = "tb_create_table")
+@EntityListeners(AuditingEntityListener.class)// 封装生成自动时间
+public class CreateTable implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 设定主键生成策略：IDENTITY 表示由数据库自动生成
+    private Long id; // Long 对应 MySQL 数据库的 bigint 类型
+
+    @Column(name = "string_value",nullable = false,unique = true,length = 20) //  不为空，唯一，且字符最大长度为 20
+    private String stringValue; // String 对应 MySQL 数据库中的 varchar 类型
+
+    @Column(name = "integer_value")
+    private Integer integerValue = 3; // 赋值默认值
+
+    @Column(name = "double_value")
+    private Double doubleValue;
+
+    /**
+     * 自动生成时间：create 生效
+     */
+    @CreatedDate
+    @Column(name = "create_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 定义时间格式
+    private Date createTime;
+
+    /**
+     * 自动生成时间：update 生效
+     */
+    @LastModifiedDate
+    @Column(name = "update_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 定义时间格式
+    private Date updateTime;
+
+    @Transient //如果你想要Entity中的某个属性不被识别为表字段，可以用@Transient注解标记。
+    private String transientValue;
+}
+```
+
+#### 3.5.3 重启 Springboot 项目
+
+重新启动项目，就会自动生成数据库表。
+
+![image-20220818222135196](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208182221355.png)
+
+### 3.6 编写实体类
+
+> 实体类于数据库表相对应。
 >
 > ​		class –> table
 >
 > ​		常量 –> column
 
-#### 3.5.1 Java数据类型于数据库数据类型对应
+#### 3.6.1 Java 和 数据库 数据类型对应
 
-> 对于不同的DB可能有所差异)
+> 对于不同的DB可能有所差异
 
 | Java数据类型                       | Hibernate数据类型 | 标准SQL数据类型   |
 | ---------------------------------- | ----------------- | ----------------- |
@@ -264,198 +279,163 @@ server:
 | java.util.TimeZone                 | timezone          | VARCHAR           |
 | java.util.Currency                 | currency          | VARCHAR           |
 
-#### 3.5.2 常见注解（Class）：
+#### 3.6.2 常见注解（Class）
 
-- @Entity：被Entity标注的实体类将会被JPA管理控制，在程序运行时，JPA会识别并映射到指定的数据库表
+##### 3.6.2.1 @Entity
 
-  - name：指定实体类名称，默认为当前实体类的非限定名称。
+**作用：**
 
-    > 若给了name属性值即@Entity(name="XXX")，则jpa在仓储层(数据层)进行自定义查询时，所查的表名应是XXX。 如：select s from XXX s
+被Entity标注的实体类将会被JPA管理控制，在程序运行时，JPA会识别并映射到指定的数据库表
 
-- @Table：当数据库表名与实体类名称不同时，使用 @Table(name="数据库表名"),与@Entity标注并列使用，置于实体类声明语句之前
+**参数：**
 
-  - name：指定对应数据库中的表名
-  - catalog（不常用）：用于设置表所映射到的数据库的目录
-  - schema（不常用）：用于设置表所映射到的数据库的模式
-  - uniqueConstraints（不常用）： 设置约束条件
+- name：指定实体类名称，默认为当前实体类的非限定名称。
 
-#### 3.5.3 常见注解（常量）：
+  > 若给了name属性值即@Entity(name="XXX")，则jpa在仓储层(数据层)进行自定义查询时，所查的表名应是XXX。 如：select s from XXX s
 
-- @Id：被标注的常量将映射为数据库的主键
+##### 3.6.2.2 @Table
 
-  > JPA官方规定数据表必须有主键（id），而之前权限管理项目中一些关联表（用户角色关联表）是不需要主键的，但如果使用JPA就必须配置主键，不管你用不用。
+**作用：**
 
-- @GeneratedValue：与@Id一同使用，用于标注主键的生成策略。
+当数据库表名与实体类名称不同时，使用 @Table(name="数据库表名"),与@Entity标注并列使用，置于实体类声明语句之前
 
-  - strategy： 
-    - IDENTITY：采用数据库ID自增长的方式产生主键，Oracle 不支持这种方式。
-    - AUTO： JPA 自动选择合适的策略，是默认选项。
-    - SEQUENCE：通过序列产生主键，通过@SequenceGenerator标注指定序列名，MySQL 不支持这种方式。
-    - TABLE：通过表产生主键，框架借由表模拟序列产生主键，使用该策略更易于做数据库移植。
+**参数：**
+
+- name：指定对应数据库中的表名
+- catalog（不常用）：用于设置表所映射到的数据库的目录
+- schema（不常用）：用于设置表所映射到的数据库的模式
+- uniqueConstraints（不常用）： 设置约束条件
+
+#### 3.6.3 常见注解（常量）
+
+##### 3.6.3.1 @Id
+
+**作用：**被标注的常量将映射为数据库的主键
+
+> JPA官方规定数据表必须有主键（id），而之前权限管理项目中一些关联表（用户角色关联表）是不需要主键的，但如果使用JPA就必须配置主键，不管你用不用。
+
+##### 3.6.3.2 @GeneratedValue
+
+**作用：**与@Id一同使用，用于标注主键的生成策略。
+
+**参数：**
+
+- strategy： 
+
+  - IDENTITY：采用数据库ID自增长的方式产生主键，Oracle 不支持这种方式。
+
+  - AUTO： JPA 自动选择合适的策略，是默认选项。
+
+  - SEQUENCE：通过序列产生主键，通过@SequenceGenerator标注指定序列名，MySQL 不支持这种方式。
+
+  - TABLE：通过表产生主键，框架借由表模拟序列产生主键，使用该策略更易于做数据库移植。
+
+
+
+##### 3.6.3.3 @Basic
+
+**作用：**一个简单的属性到数据库表的字段的映射,对于没有任何标注的 getXxxx() 方法,默认即为@Basic(fetch=FetechType.EAGER)
+
+**参数：**
+
+- fetch：表示该属性的加载读取策略
+  - EAGER 主动抓取 （默认为EAGER）
+  - LAZY 延迟加载,只有用到该属性时才会去加载
+
+-  optional (默认为 true)：表示该属性是否允许为null
+
+##### 3.6.3.4 @Column
+
+**作用：**声明实体的属性
+
+**参数：**
+
+- name: 指定映射到数据库中的字段名
+  2. unique: 是否唯一，默认为false
   
-- @Basic：一个简单的属性到数据库表的字段的映射,对于没有任何标注的 getXxxx() 方法,默认即为@Basic(fetch=FetechType.EAGER)
-
-  - fetch：表示该属性的加载读取策略
-    - EAGER 主动抓取 （默认为EAGER）
-    - LAZY 延迟加载,只有用到该属性时才会去加载
+  3. nullable: 是否允许为null，默认为true
   
-  -  optional (默认为 true)：表示该属性是否允许为null
+  4. insertable: 是否允许插入，默认为true
   
+  5. updatetable: 是否允许更新，默认为true
+  
+- columnDefinition: 指定该属性映射到数据库中的实际类型，通常是自动判断。
 
-- @Column：声明实体的属性
+##### 3.6.3.5 @Transient
 
-  - name: 指定映射到数据库中的字段名
-    2. unique: 是否唯一，默认为false
-    3. nullable: 是否允许为null，默认为true
-    4. insertable: 是否允许插入，默认为true
-    5. updatetable: 是否允许更新，默认为true
-    - columnDefinition: 指定该属性映射到数据库中的实际类型，通常是自动判断。
+  **作用：**JPA会忽略该属性，不会映射到数据库中，即程序运行后数据库中将不会有该字段
 
-- @Transient：JPA会忽略该属性，不会映射到数据库中，即程序运行后数据库中将不会有该字段
+##### 3.6.3.6 @Temporal
+**作用：**Java中没有定义 Date 类型的精度，而数据库中，表示时间类型的数据有 DATE,TIME,TIMESTAMP三种精度
 
-- @Temporal：Java中没有定义 Date 类型的精度，而数据库中，表示时间类型的数据有 DATE,TIME,TIMESTAMP三种精度
+**参数：**
 
   - @Temporal(TemporalType.DATE) 表示映射到数据库中的时间类型为 DATE，只有日期
-    - @Temporal(TemporalType.TIME) 表示映射到数据库中的时间类型为 TIME，只有时间
-    - @Temporal(TemporalType.TIMESTAMP) 表示映射到数据库中的时间类型为 TIMESTAMP,日期和时间都有
+    
+  - @Temporal(TemporalType.TIME) 表示映射到数据库中的时间类型为 TIME，只有时间
+    
+  - @Temporal(TemporalType.TIMESTAMP) 表示映射到数据库中的时间类型为 TIMESTAMP,日期和时间都有
 
-- @Embedded 和 @Embeddable：用于一个实体类要在多个不同的实体类中进行使用，而本身又不需要独立生成一个数据库表
+##### 3.6.3.7 @Embedded 和 @Embeddable：
+
+**作用：**用于一个实体类要在多个不同的实体类中进行使用，而本身又不需要独立生成一个数据库表
 
   > 具体参考：[Hibernate中@Embedded和@Embeddable注解的使用](https://blog.csdn.net/lmy86263/article/details/52108130)
 
-- @JoinColumn：定义表关联的外键字段名
+##### 3.6.7.8 @JoinColumn
 
-  - name: 指定映射到数据库中的外键的字段名
-    2. unique: 是否唯一，默认为false
-    3. nullable: 是否允许为null，默认为true
-    4. insertable: 是否允许插入，默认为true
-    5. updatetable: 是否允许更新，默认为true
-    6. columnDefinition: 指定该属性映射到数据库中的实际类型，通常是自动判断。
-    7. foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT)：指定外键相关信息，这里用法是指定外联关系但是不建立数据库外键
+**作用：**定义表关联的外键字段名
 
-- @OneToOne：
+**参数：**
 
-  - targetEntity： 指定关联实体类型，默认为被注解的属性或方法所属的类
+- name: 指定映射到数据库中的外键的字段名
+- unique: 是否唯一，默认为false
+- nullable: 是否允许为null，默认为true
+- insertable: 是否允许插入，默认为true
+- updatetable: 是否允许更新，默认为true
+- columnDefinition: 指定该属性映射到数据库中的实际类型，通常是自动判断。
+- foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT)：指定外键相关信息，这里用法是指定外联关系但是不建立数据库外键
 
-  - cascade： 级联操作策略
+##### 3.6.7.9 @OneToOne
 
-    - CascadeType.ALL 级联所有操作
-    - CascadeType.PERSIST 级联新增
-    - CascadeType.MERGE 级联归并更新
-    - CascadeType.REMOVE 级联删除
-    - CascadeType.REFRESH 级联刷新
-    - CascadeType.DETACH 级联分离
+**参数：**
 
-  - fetch： fetch 表示该属性的加载读取策略 (默认值为 EAGER)
+- targetEntity： 指定关联实体类型，默认为被注解的属性或方法所属的类
 
-    - EAGER 主动抓取
-    - LAZY 延迟加载,只有用到该属性时才会去加载
+- cascade： 级联操作策略
 
-  - optional： 
+  - CascadeType.ALL 级联所有操作
+  - CascadeType.PERSIST 级联新增
+  - CascadeType.MERGE 级联归并更新
+  - CascadeType.REMOVE 级联删除
+  - CascadeType.REFRESH 级联刷新
+  - CascadeType.DETACH 级联分离
 
-    - 默认为true，关联字段是否为空
-    - 如果为false，则常与@JoinColumn一起使用
+- fetch： fetch 表示该属性的加载读取策略 (默认值为 EAGER)
 
-  - mappedBy： 指定关联关系，该参数只用于关联关系被拥有方只用于双向关联@OneToOne，@OneToMany，@ManyToMany。而@ManyToOne中没有@OneToOne(mappedBy = “xxx”)
-    表示xxx所对应的类为关系被拥有方，而关联的另一方为关系拥有方
+  - EAGER 主动抓取
+  - LAZY 延迟加载,只有用到该属性时才会去加载
 
-    - 关系拥有方：对应拥有外键的数据库表
-    - 关系被拥有方：对应主键被子表引用为外键的数据库表
+- optional： 
 
-  - orphanRemoval:默认值为false
-    判断是否自动删除与关系拥有方不存在联系的关系被拥有方(关系被拥有方的一个主键在关系拥有方中未被引用，当jpa执行更新操作时，是否删除数据库中此主键所对应的一条记录，若为true则删除)
+  - 默认为true，关联字段是否为空
+  - 如果为false，则常与@JoinColumn一起使用
 
-    ```java
-    //单向 一对一
-    @Entity  
-    public class Emp{//员工
-      @Id
-      @GeneratedValue
-      privte Integer eId;
-    
-      @Column(length = 40)
-      private String empName;
-    
-      @OneToOne(cascade = CascadeType.ALL)
-      private Identity identity;
-      //get,set方法省略
-    }
-    
-    @Entity
-    public class Identity{//身份证
-      //...
-    }
-    ```
+- mappedBy： 指定关联关系，该参数只用于关联关系被拥有方只用于双向关联@OneToOne，@OneToMany，@ManyToMany。而@ManyToOne中没有@OneToOne(mappedBy = “xxx”)
+  表示xxx所对应的类为关系被拥有方，而关联的另一方为关系拥有方
 
-    ```java
-    //双向 一对一
-    @Entity  
-    public class Emp{
-      @Id
-      @GeneratedValue
-      privte Integer eId;
-    
-      @Column(length = 40)
-      private String empName;
-    
-      @OneToOne(cascade = CascadeType.ALL)
-      private Identity identity;
-      //get,set方法省略
-    }
-    
-    @Entity
-    public class Identity{
-      @Id
-      @GeneratedValue
-      privte Integer iId;
-    
-      @OneToOne(cascade = CascadeType.ALL, mappedBy = "identity")
-      private Emp emp;
-      //...
-    }
-    ```
+  - 关系拥有方：对应拥有外键的数据库表
+  - 关系被拥有方：对应主键被子表引用为外键的数据库表
 
-    以上例子，双向一对一，Emp 为关系拥有方，Identity 为关系被拥有方。
-    执行spring-data-jpa新增操作时，如果通过Identity的数据访问层进行新增操作(IdentityRepository.save())
-    ，Emp表和Identity表都有数据，但是不会设置这两条数据的关系，Emp表中的外键为null。
-    反之，以关系拥有方Emp的数据访问层进行新增操作(EmpRepository.save()),Emp表和Identity表都有数据，并且设置了两条数据的关系，即Emp表中的外键也得到正确新增。
+- orphanRemoval:默认值为false
+  判断是否自动删除与关系拥有方不存在联系的关系被拥有方(关系被拥有方的一个主键在关系拥有方中未被引用，当jpa执行更新操作时，是否删除数据库中此主键所对应的一条记录，若为true则删除)
 
-- @ManyToOne、@OneToMany
-
-  > 多对一(也可叫一对多，只是前后表颠倒一下而已)，只有双向多对一时才用得到@OneToMany。多对一中多的一方必定是对应数据库中拥有外键的表，即是关系拥有方，@ManyToOne只用在多对一中代表多的一类中，因为mappedBy只用于关系被拥有方，所以@ManyToOne参数中不包含mappedBy。
-
-  **@ManyToOne参数：**
-
-  - targetEntity： 指定关联实体类型，默认为被注解的属性或方法所属的类
-  - cascade： 级联操作策略
-    - CascadeType.ALL 级联所有操作
-    - CascadeType.PERSIST 级联新增
-    - CascadeType.MERGE 级联归并更新
-    - CascadeType.REMOVE 级联删除
-    - CascadeType.REFRESH 级联刷新
-    - CascadeType.DETACH 级联分离
-  - fetch： fetch 表示该属性的加载读取策略(@ManyToOne 的默认值是 EAGER，@OneToMany 的默认值是 LAZY)
-    - EAGER 主动抓取
-    - LAZY 延迟加载,只有用到该属性时才会去加载
-  - optional： 
-    - 默认为true，关联字段是否为空
-    - 如果为false，则常与@JoinColumn一起使用
-
-   **@OneToMany参数除上述以外还有：**
-
-  - mappedBy: 指定关联关系，该参数只用于关联关系被拥有方
-    只用于双向关联@OneToOne,@OneToMany,@ManyToMany。而@ManyToOne中没有
-    @OneToMany(mappedBy = “xxx”)
-    表示xxx所对应的类为关系被拥有方，而关联的另一方为关系拥有方
-    - 关系拥有方：对应拥有外键的数据库表
-    - 关系被拥有方：对应主键被子表引用为外键的数据库表
-  - orphanRemoval:默认值为false
-    判断是否自动删除与关系拥有方不存在联系的关系被拥有方(关系被拥有方的一个主键在关系拥有方中未被引用，当jpa执行更新操作时，是否删除数据库中此主键所对应的一条记录，若为true则删除)
+**实例：**
 
   ```java
-  //单向 多对一
-  @Entity
-  public class Emp{
+  //单向 一对一
+  @Entity  
+  public class Emp{//员工
     @Id
     @GeneratedValue
     privte Integer eId;
@@ -463,26 +443,20 @@ server:
     @Column(length = 40)
     private String empName;
   
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Dept dept;
-    //...
+    @OneToOne(cascade = CascadeType.ALL)
+    private Identity identity;
+    //get,set方法省略
   }
   
   @Entity
-  public class Dept{
-    @Id
-    @GeneratedValue
-    privte Integer dId;
-  
-    @Column(length = 40)
-    private String deptName;
+  public class Identity{//身份证
     //...
   }
   ```
 
   ```java
-  //双向 多对一
-  @Entity
+  //双向 一对一
+  @Entity  
   public class Emp{
     @Id
     @GeneratedValue
@@ -491,90 +465,199 @@ server:
     @Column(length = 40)
     private String empName;
   
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    private Identity identity;
+    //get,set方法省略
+  }
+  
+  @Entity
+  public class Identity{
+    @Id
+    @GeneratedValue
+    privte Integer iId;
+  
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "identity")
     private Emp emp;
     //...
   }
-  
-  @Entity
-  public class Dept{
-    @Id
-    @GeneratedValue
-    privte Integer dId;
-  
-    @Column(length = 40)
-    private String deptName;
-  
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "emp")
-    private List<Emp> emps;
-    //...
-  }
   ```
 
-  > 无论双向关联还是单向关联，数据库中均会在Emp表中自动生成一个外键（dept_d_id）
+  以上例子，双向一对一，Emp 为关系拥有方，Identity 为关系被拥有方。
+  执行spring-data-jpa新增操作时，如果通过Identity的数据访问层进行新增操作(IdentityRepository.save())
+  ，Emp表和Identity表都有数据，但是不会设置这两条数据的关系，Emp表中的外键为null。
+  反之，以关系拥有方Emp的数据访问层进行新增操作(EmpRepository.save()),Emp表和Identity表都有数据，并且设置了两条数据的关系，即Emp表中的外键也得到正确新增。
 
-- @ManyToMany：
+##### 3.6.7.10 @ManyToOne、@OneToMany
 
-  - targetEntity： 指定关联实体类型，默认为被注解的属性或方法所属的类
-  - cascade： 级联操作策略
-    - CascadeType.ALL 级联所有操作
-    - CascadeType.PERSIST 级联新增
-    - CascadeType.MERGE 级联归并更新
-    - CascadeType.REMOVE 级联删除
-    - CascadeType.REFRESH 级联刷新
-    - CascadeType.DETACH 级联分离
-  - fetch： fetch 表示该属性的加载读取策略 (默认值为 LAZY)
-    - EAGER 主动抓取
-    - LAZY 延迟加载,只有用到该属性时才会去加载
-  - mappedBy: 指定关联关系，该参数只用于关联关系被拥有方
-    只用于双向关联@OneToOne,@OneToMany,@ManyToMany。而@ManyToOne中没有。
-    @ManyToMany(mappedBy = “xxx”)表示xxx所对应的类为关系被拥有方，而关联的另一方为关系拥有方：
-    - 关系拥有方：对应拥有外键的数据库表
-    - 关系被拥有方：对应主键被子表引用为外键的数据库表
+**作用：**
 
-  ```java
-  //单向 多对多
-  @Entity
-  public class Student{
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Course> courses;
-    //...
-  }
+多对一(也可叫一对多，只是前后表颠倒一下而已)，只有双向多对一时才用得到@OneToMany。多对一中多的一方必定是对应数据库中拥有外键的表，即是关系拥有方，@ManyToOne只用在多对一中代表多的一类中，因为mappedBy只用于关系被拥有方，所以@ManyToOne参数中不包含mappedBy。
+
+**@ManyToOne参数：**
+
+- targetEntity： 指定关联实体类型，默认为被注解的属性或方法所属的类
+- cascade： 级联操作策略
+  - CascadeType.ALL 级联所有操作
+  - CascadeType.PERSIST 级联新增
+  - CascadeType.MERGE 级联归并更新
+  - CascadeType.REMOVE 级联删除
+  - CascadeType.REFRESH 级联刷新
+  - CascadeType.DETACH 级联分离
+- fetch： fetch 表示该属性的加载读取策略(@ManyToOne 的默认值是 EAGER，@OneToMany 的默认值是 LAZY)
+  - EAGER 主动抓取
+  - LAZY 延迟加载,只有用到该属性时才会去加载
+- optional： 
+  - 默认为true，关联字段是否为空
+  - 如果为false，则常与@JoinColumn一起使用
+
+ **@OneToMany参数**
+
+除上述以外还有：
+
+- mappedBy: 指定关联关系，该参数只用于关联关系被拥有方
+  只用于双向关联@OneToOne,@OneToMany,@ManyToMany。而@ManyToOne中没有
+  @OneToMany(mappedBy = “xxx”)
+  表示xxx所对应的类为关系被拥有方，而关联的另一方为关系拥有方
+  - 关系拥有方：对应拥有外键的数据库表
+  - 关系被拥有方：对应主键被子表引用为外键的数据库表
+- orphanRemoval:默认值为false
+  判断是否自动删除与关系拥有方不存在联系的关系被拥有方(关系被拥有方的一个主键在关系拥有方中未被引用，当jpa执行更新操作时，是否删除数据库中此主键所对应的一条记录，若为true则删除)
+
+**举例：**
+
+```java
+//单向 多对一
+@Entity
+public class Emp{
+  @Id
+  @GeneratedValue
+  privte Integer eId;
+
+  @Column(length = 40)
+  private String empName;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  private Dept dept;
+  //...
+}
+
+@Entity
+public class Dept{
+  @Id
+  @GeneratedValue
+  privte Integer dId;
+
+  @Column(length = 40)
+  private String deptName;
+  //...
+}
+```
+
+```java
+//双向 多对一
+@Entity
+public class Emp{
+  @Id
+  @GeneratedValue
+  privte Integer eId;
+
+  @Column(length = 40)
+  private String empName;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  private Emp emp;
+  //...
+}
+
+@Entity
+public class Dept{
+  @Id
+  @GeneratedValue
+  privte Integer dId;
+
+  @Column(length = 40)
+  private String deptName;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "emp")
+  private List<Emp> emps;
+  //...
+}
+```
+
+> 无论双向关联还是单向关联，数据库中均会在Emp表中自动生成一个外键（dept_d_id）
+
+##### 3.6.7.11 @ManyToMany
+
+**参数：**
+
+- targetEntity： 指定关联实体类型，默认为被注解的属性或方法所属的类
+- cascade： 级联操作策略
+  - CascadeType.ALL 级联所有操作
+  - CascadeType.PERSIST 级联新增
+  - CascadeType.MERGE 级联归并更新
+  - CascadeType.REMOVE 级联删除
+  - CascadeType.REFRESH 级联刷新
+  - CascadeType.DETACH 级联分离
+- fetch： fetch 表示该属性的加载读取策略 (默认值为 LAZY)
+  - EAGER 主动抓取
+  - LAZY 延迟加载,只有用到该属性时才会去加载
+- mappedBy: 指定关联关系，该参数只用于关联关系被拥有方
+  只用于双向关联@OneToOne,@OneToMany,@ManyToMany。而@ManyToOne中没有。
+  @ManyToMany(mappedBy = “xxx”)表示xxx所对应的类为关系被拥有方，而关联的另一方为关系拥有方：
+  - 关系拥有方：对应拥有外键的数据库表
+  - 关系被拥有方：对应主键被子表引用为外键的数据库表
   
-  @Entity
-  public class Course{
-    //...
-  }
-  ```
+  **举例：**
 
-  ```java
-  //双向 多对多
-  @Entity
-  public class Student{
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Course> courses;
-    //...
-  }
-  
-  @Entity
-  public class Course{
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "courses")
-    private List<Student> students;
-    //...
-  }
-  ```
+```java
+//单向 多对多
+@Entity
+public class Student{
+  @ManyToMany(cascade = CascadeType.ALL)
+  private List<Course> courses;
+  //...
+}
 
-  > 所有双向关联使用时需谨慎，查询时容易引起栈内存溢出，尽量使用单向关联
+@Entity
+public class Course{
+  //...
+}
+```
 
--  @Enumerated：当[实体类](https://so.csdn.net/so/search?q=实体类&spm=1001.2101.3001.7020)中有枚举类型的属性时，默认情况下自动生成的数据库表中对应的字段类型是枚举的索引值，是数字类型的，若希望数据库中存储的是枚举对应的String类型，在属性上加入`@Enumerated(EnumType.STRING)`注解即可。
+```java
+//双向 多对多
+@Entity
+public class Student{
+  @ManyToMany(cascade = CascadeType.ALL)
+  private List<Course> courses;
+  //...
+}
 
-  ```java
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = true)
-  private RoleEnum role;
-  ```
+@Entity
+public class Course{
+  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "courses")
+  private List<Student> students;
+  //...
+}
+```
 
-#### 3.5.4 创建自动时间
+> 所有双向关联使用时需谨慎，查询时容易引起栈内存溢出，尽量使用单向关联
+
+##### 3.6.7.12 @Enumerated
+
+**作用：**
+
+当[实体类](https://so.csdn.net/so/search?q=实体类&spm=1001.2101.3001.7020)中有枚举类型的属性时，默认情况下自动生成的数据库表中对应的字段类型是枚举的索引值，是数字类型的，若希望数据库中存储的是枚举对应的String类型，在属性上加入`@Enumerated(EnumType.STRING)`注解即可。
+
+**举例：**
+
+```java
+@Enumerated(EnumType.STRING)
+@Column(nullable = true)
+private RoleEnum role;
+```
+
+#### 3.6.4 实现自动时间
 
 > 对应的SQL语句：
 >
@@ -583,37 +666,37 @@ server:
 >
 > `create_time`根据自动封装创建时间、`update_time`自动更新为最新操作的时间。
 
-1. 修改Entity 类
+##### 3.6.4.1 修改Entity 类
 
-   ```JAVA
-   @EntityListeners(AuditingEntityListener.class)
-   public class User implements Serializable { 
-   	@CreatedDate
-       @Column(name = "create_time")
-       private Date createTime;
-   
-       @LastModifiedDate
-       @Column(name = "update_time")
-       private Date updateTime;
-   }
-   ```
+```JAVA
+@EntityListeners(AuditingEntityListener.class)
+public class User implements Serializable { 
+	@CreatedDate
+    @Column(name = "create_time")
+    private Date createTime;
 
-2. 修改启动文件
+    @LastModifiedDate
+    @Column(name = "update_time")
+    private Date updateTime;
+}
+```
 
-   ```java
-   @EnableJpaAuditing
-   public class SpringBootJpaApplication { ... }
-   ```
+##### 3.6.4.2 修改启动文件
 
-### 3.6 创建Dao文件
+```java
+@EnableJpaAuditing
+public class SpringBootJpaApplication { ... }
+```
 
-#### 3.6.1 Repository的继承关系
+### 3.7 创建Dao文件
+
+#### 3.7.1 Repository的继承关系
 
 ![img](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208182353073.png)
 
 > 可能你会见到有的案例中`extends CrudRepository<T, ID>`等，其实都是可以的，翻看源码就知道，继承`JpaRepository`也可以使用`CrudRepository`的方法
 
-#### 3.6.2 继承创建Dao文件
+#### 3.7.2 继承创建Dao文件
 
 ```java
 public interface UserDao extends JpaRepository<User, Long> {  }
@@ -621,9 +704,9 @@ public interface UserDao extends JpaRepository<User, Long> {  }
 
 > `JpaRepository<T, ID>`，要指定泛型类型，否则Spring注入这个Bean的时候发现该Bean泛型类型不定而注入失败。
 
-### 3.7 内置的查询方法
+### 3.8 内置的查询方法
 
-#### 3.7.1  方法列表
+#### 3.8.1  方法列表
 
 **JpaRepository：**
 
@@ -638,7 +721,7 @@ public interface UserDao extends JpaRepository<User, Long> {  }
 
 ![img](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208190003998.png)
 
-#### 3.7.2 编写service 方法
+#### 3.8.2 编写service 方法
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>> (interface) UserCrudService.java <<<<<<<<<<<<<<<<<<<<<<<<<
@@ -892,7 +975,7 @@ public class UserCrudServiceImpl implements UserCrudService {
 
 ```
 
-#### 3.7.3 编写test方法
+#### 3.8.3 编写test方法
 
 使用Idea的话，在`UserDao.java`接口名前按`Alt + Enter`键(mac)，快速生成测试类`UserDaoTest.java`
 
@@ -1044,11 +1127,11 @@ public class UserCrudServiceImplTest extends JpaApplicationTests {
 }
 ```
 
-### 3.8 自定义简单查询
+### 3.9 自定义简单查询
 
 自定义简单查询就是根据方法名自动生成SQL。前面是用JPA内置的方法进行简单的CRUD，下面可以自定义方法名实现自定义SQL：主要语法是：`findByXX`,`readByXX`,`queryByXX`,`countByXX`。`XX`代表属性名。
 
-#### 3.8.1 常用关键字
+#### 3.9.1 常用关键字
 
 基本上SQL体系中的关键字在JPA上都有对应的，具体的关键字和使用方法生成的SQL如下表：
 
@@ -1080,7 +1163,7 @@ public class UserCrudServiceImplTest extends JpaApplicationTests {
 | IgnoreCase        | findByFirstnameIgnoreCase               | … where UPPER(x.firstame) = UPPER(?1)                        |
 | top               | findTop100                              | top 10/where ROWNUM <=10                                     |
 
-#### 3.8.2 编写dao文件
+#### 3.9.2 编写dao文件
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UserDao.java <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1132,7 +1215,7 @@ public interface UserDao extends JpaRepository<User, Long> {
 }
 ```
 
-#### 3.8.3 编写service 方法
+#### 3.9.3 编写service 方法
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UserEasyService.java <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1202,7 +1285,7 @@ public class UserEasyServiceImpl implements UserEasyService {
 }
 ```
 
-#### 3.8.4 编写test方法
+#### 3.9.4 编写test方法
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>> UserEasyServiceImplTest <<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1252,7 +1335,7 @@ public class UserEasyServiceImplTest extends JpaApplicationTests {
 }
 ```
 
-### 3.9 自定义SQL查询
+### 3.10 自定义SQL查询
 
 1. 使用自定义SQL查询用`@Query(sql)`即可，如果涉及更新、添加、删除（事务）操作需要再添加`@Modifying`注解。也可以根据需要添加`@Transactional`注解对事务的支持和、查询超时的设置等。
 
@@ -1260,7 +1343,7 @@ public class UserEasyServiceImplTest extends JpaApplicationTests {
 
    这和PageHelper差别还是蛮大的，若：数据库一共两条记录，你查询`new PageRequest(1,3)`得到的`content`是`[]`
 
-#### 3.9.1 编写dao文件
+#### 3.10.1 编写dao文件
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UserDao.java <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1294,7 +1377,7 @@ public interface UserDao extends JpaRepository<User, Long> {
 }
 ```
 
-#### 3.9.2 编写service方法
+#### 3.10.2 编写service方法
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>> UserComplexService.java <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1363,7 +1446,7 @@ public class UserComplexServiceImpl implements UserComplexService {
 }
 ```
 
-#### 3.9.3 编写test方法
+#### 3.10.3 编写test方法
 
 ```java
 // >>>>>>>>>>>>>>>>>>>>>>>>>> UserComplexServiceImplTest.java <<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1415,7 +1498,7 @@ public class UserComplexServiceImplTest extends JpaApplicationTests {
 }
 ```
 
-### 3.10 多表查询
+### 3.11 多表查询
 
 实在想吐槽，JPA这样对多表查询的支持太差了，**多表查询**就必须手动写SQL，然后放在`@Query`注解中，这样SQL真的很难看，而且需要额外遵循JPA的规范。
 
@@ -1472,77 +1555,4 @@ org.springframework.dao.InvalidDataAccessApiUsageException: No EntityManager wit
 
 <img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/gitee_16.svg"/> gitee：[gitee.com/salute83/springboot-jpa](https://gitee.com/salute83/springboot-jpa.git)
 
-<img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/doc_32.svg" alt="img" style="zoom:60%;" /> docsift：[docsify/83_start_docks/springbot-jpa](https://83start.github.io/83_start_docs/#/./Springboot/Springboot_Jpa)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<img src="https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/DocsifyFile/doc_32.svg" alt="img" style="zoom:60%;" /> docsift：[docsify/83_start_docks/springbot-jpa]([Springboot 整合 Jpa (83start.github.io)](https://83start.github.io/83_start_docs/#/./Springboot/Springboot_Jpa))
