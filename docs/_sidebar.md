@@ -11,6 +11,7 @@
   * [Springboot 整合 EasyPoi](./Springboot/Springboot_EasyPoi.md)
   * [Springboot 整合 Editor.md](./Springboot/Springboot_EditorMd.md)
   * [Springboot 整合 SpringSecurity](./Springboot/Springboot_SpringSecurity.md)
+  * [Springboot 整合 Jpa](./Springboot/Springboot_Jpa.md)
 
 
 * 参考文档
