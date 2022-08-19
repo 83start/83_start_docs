@@ -1,4 +1,6 @@
-### 1、列举文件 list
+### 1 列举文件 `ls`
+
+**作用：**
 
 就是 list 的缩写，通过 ls 命令不仅可以查看 linux 文件夹包含的文件，而且可以查看文件权限(包括目录、文件夹、文件权限)查看目录信息等等。
 
@@ -16,156 +18,146 @@ ls -l 除了文件名之外，还将文件的权限、所有者、文件大小�
 
 **实例：**
 
-(1) 按易读方式按时间反序排序，并显示文件详细信息
+1. 按易读方式按时间反序排序，并显示文件详细信息
+    ```bash
+    ls -lhrt
+    ```
 
-```bash
-ls -lhrt
-```
+2.  按大小反序显示文件详细信息
+    ```bash
+    ls -lrS
+    ```
 
-(2) 按大小反序显示文件详细信息
+3. 列出当前目录中所有以"t"开头的目录的详细内容
+    ```bash
+    ls -l t*
+    ```
 
-```bash
-ls -lrS
-```
+4.  列出文件绝对路径（不包含隐藏文件）
+    ```bash
+    ls | sed "s:^:`pwd`/:"
+    ```
 
-(3)列出当前目录中所有以"t"开头的目录的详细内容
+5. 列出文件绝对路径（包含隐藏文件）
+    ```bash
+    find $pwd -maxdepth 1 | xargs ls -ld
+    ```
 
-```bash
-ls -l t*
-```
+### 2 切换目录 `cd`
 
-(4) 列出文件绝对路径（不包含隐藏文件）
-
-```bash
-ls | sed "s:^:`pwd`/:"
-```
-
-(5) 列出文件绝对路径（包含隐藏文件）
-
-```bash
-find $pwd -maxdepth 1 | xargs ls -ld
-```
-
-### 2、切换目录 cd
-
-cd(changeDirectory) 命令语法：
+**命令语法：**
 
 ```bash
 cd [目录名]
 ```
 
-说明：切换当前目录至 dirName。
-
 **实例：**
 
-（1）进入要目录
+1. 进入要目录
+    ```bash
+    cd /
+    ```
 
-```bash
-cd /
-```
+2. 进入 "home" 目录
+    ```bash
+    cd ~
+    ```
 
-（2）进入 "home" 目录
+3. 进入上一次工作路径
+    ```bash
+    cd -
+    ```
 
-```
-cd ~
-```
+4. 把上个命令的参数作为cd参数使用。
+    ```bash
+    cd !$
+    ```
 
-（3）进入上一次工作路径
+### 3 查看工作目录 `pwd`
 
-```
-cd -
-```
-
-（4）把上个命令的参数作为cd参数使用。
-
-```
-cd !$
-```
-
-### 3查看工作目录 pwd
+**作用：**
 
 pwd 命令用于查看当前工作目录路径。
 
 **实例：**
 
-（1）查看当前路径
+1. 查看当前路径
+    ```bash
+    pwd
+    ```
 
-```
-pwd
-```
+2. 查看软链接的实际路径
+    ```bash
+    pwd -P
+    ```
 
-（2）查看软链接的实际路径
-
-```
-pwd -P
-```
-
-4、创建文件夹 mkdir
+### 4 创建文件夹`mkdir`
+**作用：**
 
 mkdir 命令用于创建文件夹。
 
-可用选项：
+**常用参数：**
 
 - **-m**: 对新建目录设置存取权限，也可以用 chmod 命令设置;
 - **-p**: 可以是一个路径名称。此时若路径中的某些目录尚不存在,加上此选项后，系统将自动建立好那些尚不在的目录，即一次可以建立多个目录。
 
 **实例：**
 
-（1）当前工作目录下创建名为  t的文件夹
+1. 当前工作目录下创建名为  t的文件夹
 
-```
+```bash
 mkdir t
 ```
 
-（2）在 tmp 目录下创建路径为 test/t1/t 的目录，若不存在，则创建：
+2. 在 tmp 目录下创建路径为 test/t1/t 的目录，若不存在，则创建：
 
-```
+```bash
 mkdir -p /tmp/test/t1/t
 ```
 
-### 5、删除 rm
+### 5 删除 `rm`
+
+**作用：**
 
 删除一个目录中的一个或多个文件或目录，如果没有使用 -r 选项，则 rm 不会删除目录。如果使用 rm 来删除文件，通常仍可以将该文件恢复原状。
 
-```
+```bash
 rm [选项] 文件…
 ```
 
 **实例：**
 
-（1）删除任何 .log 文件，删除前逐一询问确认：
+1. 删除任何 .log 文件，删除前逐一询问确认：
+    ```bash
+    rm -i *.log
+    ```
 
-```
-rm -i *.log
-```
+2. 删除 test 子目录及子目录中所有档案删除，并且不用一一确认：
+    ```bash
+    rm -rf test
+    ```
 
-（2）删除 test 子目录及子目录中所有档案删除，并且不用一一确认：
+3. 删除以 -f 开头的文件
+    ```bash
+    rm -- -f*
+    ```
 
-```
-rm -rf test
-```
+### 6 删除文件夹 `rmdir`
 
-（3）删除以 -f 开头的文件
+**作用：**从一个目录中删除一个或多个子目录项，删除某目录时也必须具有对其父目录的写权限。
 
-```
-rm -- -f*
-```
-
-### 6、删除文件夹 rmdir
-
-从一个目录中删除一个或多个子目录项，删除某目录时也必须具有对其父目录的写权限。
-
-**注意**：不能删除非空目录
+**注意：**不能删除非空目录
 
 **实例：**
 
-（1）当 parent 子目录被删除后使它也成为空目录的话，则顺便一并删除：
+1. 当 parent 子目录被删除后使它也成为空目录的话，则顺便一并删除：
+    ```bash
+    rmdir -p parent/child/child11
+    ```
 
-```
-rmdir -p parent/child/child11
-```
+### 7 移动或重命名 `mv`
 
-### 7、移动或重命名 mv
+**作用：**
 
 移动文件或修改文件名，根据第二参数类型（如目录，则移动文件；如为文件则重命令该文件）。
 
@@ -173,37 +165,39 @@ rmdir -p parent/child/child11
 
 **实例：**
 
-（1）将文件 test.log 重命名为 test1.txt
+1. 将文件 test.log 重命名为 test1.txt
+    ```bash
+    mv test.log test1.txt
+    ```
 
-```
-mv test.log test1.txt
-```
+2. 将文件 log1.txt,log2.txt,log3.txt 移动到根的 test3 目录中
+    ```bash
+    mv llog1.txt log2.txt log3.txt /test3
+    ```
 
-（2）将文件 log1.txt,log2.txt,log3.txt 移动到根的 test3 目录中
+3. 将文件 file1 改名为 file2，如果 file2 已经存在，则询问是否覆盖
+    ```bash
+    mv -i log1.txt log2.txt
+    ```
 
-```
-mv llog1.txt log2.txt log3.txt /test3
-```
+4. 移动当前文件夹下的所有文件到上一级目录
+    ```bash
+    mv * ../
+    ```
 
-（3）将文件 file1 改名为 file2，如果 file2 已经存在，则询问是否覆盖
+### 8 移动或备份 `cp`
 
-```
-mv -i log1.txt log2.txt
-```
-
-（4）移动当前文件夹下的所有文件到上一级目录
-
-```
-mv * ../
-```
-
-### 8、移动或备份 cp
+**作用：**
 
 将源文件复制至目标文件，或将多个源文件复制至目标目录。
 
-注意：命令行复制，如果目标文件已经存在会提示是否覆盖，而在 shell 脚本中，如果不加 -i 参数，则不会提示，而是直接覆盖！
+**注意：**
 
-```
+命令行复制，如果目标文件已经存在会提示是否覆盖，而在 shell 脚本中，如果不加 -i 参数，则不会提示，而是直接覆盖！
+
+**常用参数：**
+
+```bash
 -i 提示
 -r 复制目录及目录内所有项目
 -a 复制的文件与原文件时间一样
@@ -211,90 +205,84 @@ mv * ../
 
 **实例：**
 
-（1）复制 a.txt 到 test 目录下，保持原文件时间，如果原文件存在提示是否覆盖。
+1. 复制 a.txt 到 test 目录下，保持原文件时间，如果原文件存在提示是否覆盖。
+    ```bash
+    cp -ai a.txt test
+    ```
 
-```
-cp -ai a.txt test
-```
+2. 为 a.txt 建立一个链接（快捷方式）
+    ```bash
+    cp -s a.txt link_a.txt
+    ```
 
-（2）为 a.txt 建立一个链接（快捷方式）
+### 9 查看文件 `cat`
 
-```
-cp -s a.txt link_a.txt
-```
-
-### 9、查看文件 cat
-
-cat 主要有三大功能：
+**cat 主要有三大功能：**
 
 1.一次显示整个文件:
-
-```
-cat filename
-```
+    ```bash
+    cat filename
+    ```
 
 2.从键盘创建一个文件:
-
-```
-cat > filename
-```
-
- 只能创建新文件，不能编辑已有文件。
+    ```bash
+    cat > filename
+    ```
+    只能创建新文件，不能编辑已有文件。
 
 3.将几个文件合并为一个文件:
+    ```bash
+    cat file1 file2 > file
+    ```
 
-```
-cat file1 file2 > file
-```
+**常用参数：**
 
 - -b 对非空输出行号
 - -n 输出所有行号
 
 **实例：**
 
-（1）把 log2012.log 的文件内容加上行号后输入 log2013.log 这个文件里
+1. 把 log2012.log 的文件内容加上行号后输入 log2013.log 这个文件里
+    ```bash
+    cat -n log2012.log log2013.log
+    ```
 
-```
-cat -n log2012.log log2013.log
-```
+2. 把 log2012.log 和 log2013.log 的文件内容加上行号（空白行不加）之后将内容附加到 log.log 里
+    ```bash
+    cat -b log2012.log log2013.log log.log
+    ```
 
-（2）把 log2012.log 和 log2013.log 的文件内容加上行号（空白行不加）之后将内容附加到 log.log 里
+3. 使用 here doc 生成新文件
+    ```bash
+    cat >log.txt <<EOF
+    >Hello
+    >World
+    >PWD=$(pwd)
+    >EOF
+    ls -l log.txt
+    cat log.txt
+    Hello
+    World
+    PWD=/opt/soft/test
+    ```
 
-```
-cat -b log2012.log log2013.log log.log
-```
+4. 反向列示
+    ```bash
+    tac log.txt
+    PWD=/opt/soft/test
+    World
+    Hello
+    ```
 
-（3）使用 here doc 生成新文件
+### 10 查看文件 `more`
 
-```
-cat >log.txt <<EOF
->Hello
->World
->PWD=$(pwd)
->EOF
-ls -l log.txt
-cat log.txt
-Hello
-World
-PWD=/opt/soft/test
-```
-
-（4）反向列示
-
-```
-tac log.txt
-PWD=/opt/soft/test
-World
-Hello
-```
-
-### 10、查看文件 more
+**作用：**
 
 功能类似于 cat, more 会以一页一页的显示方便使用者逐页阅读，而最基本的指令就是按空白键（space）就往下一页显示，按 b 键就会往回（back）一页显示。
 
 **命令参数：**
 
-```
+```bash
 +n      从笫 n 行开始显示
 -n       定义屏幕大小为n行
 +/pattern 在每个档案显示前搜寻该字串（pattern），然后从该字串前两行之后开始显示 
@@ -308,7 +296,7 @@ Hello
 
 **常用操作命令：**
 
-```
+```bash
 Enter    向下 n 行，需要定义。默认为 1 行
 Ctrl+F   向下滚动一屏
 空格键  向下滚动一屏
@@ -322,27 +310,27 @@ q       退出more
 
 **实例：**
 
-（1）显示文件中从第3行起的内容
+1. 显示文件中从第3行起的内容
+    ```bash
+    more +3 text.txt
+    ```
 
-```
-more +3 text.txt
-```
-
-（2）在所列出文件目录详细信息，借助管道使每次显示 5 行
-
-```
-ls -l | more -5
-```
+2. 在所列出文件目录详细信息，借助管道使每次显示 5 行
+    ```bash
+    ls -l | more -5
+    ```
 
 按空格显示下 5 行。
 
-### 11、查看文件 less
+### 11 查看文件 `less`
+
+**作用：**
 
 less 与 more 类似，但使用 less 可以随意浏览文件，而 more 仅能向前移动，却不能向后移动，而且 less 在查看之前不会加载整个文件。
 
 **常用命令参数：**
 
-```
+```bash
 -i  忽略搜索时的大小写
 -N  显示每行的行号
 -o  <文件名> 将less 输出的内容在指定文件中保存起来
@@ -366,80 +354,81 @@ y  向前滚动一行
 
 **实例：**
 
-（1）ps 查看进程信息并通过 less 分页显示
+1. ps 查看进程信息并通过 less 分页显示
+    ```bash
+    ps -aux | less -N
+    ```
 
-```
-ps -aux | less -N
-```
-
-（2）查看多个文件
-
-```
-less 1.log 2.log
-```
+2. 查看多个文件
+    ```bash
+    less 1.log 2.log
+    ```
 
 可以使用 n 查看下一个，使用 p 查看前一个。
 
-### 12、显示文件开头 head
+### 12 显示文件开头 `head`
+
+**作用：**
 
 head 用来显示档案的开头至标准输出中，默认 head 命令打印其相应文件的开头 10 行。
 
 **常用参数：**
 
-```
+```bash
 -n<行数> 显示的行数（行数为复数表示从最后向前数）
 ```
 
 **实例：**
 
-（1）显示 1.log 文件中前 20 行
+1. 显示 1.log 文件中前 20 行
+    ```bash
+    head 1.log -n 20
+    ```
 
-```
-head 1.log -n 20
-```
+2. 显示 1.log 文件前 20 字节
+    ```bash
+    head -c 20 log2014.log
+    ```
 
-（2）显示 1.log 文件前 20 字节
+3. 显示  t.log最后 10 行
+    ```bash
+    head -n -10 t.log
+    ```
 
-```
-head -c 20 log2014.log
-```
+### 13 显示文章末尾 `tail`
 
-（3）显示  t.log最后 10 行
-
-```
-head -n -10 t.log
-```
-
-### 13、显示文章末尾 tail
+**作用：**
 
 用于显示指定文件末尾内容，不指定文件时，作为输入信息进行处理。常用查看日志文件。
 
 **常用参数：**
 
-```
+```bash
 -f 循环读取（常用于查看递增的日志文件）
 -n<行数> 显示行数（从后向前）
 ```
 
-（1）循环读取逐渐增加的文件内容
+**举例：**
 
-```
-ping 127.0.0.1 > ping.log &
-```
+1. 循环读取逐渐增加的文件内容
+    ```bash
+    ping 127.0.0.1 > ping.log &
+    ```
 
-后台运行：可使用 jobs -l 查看，也可使用  fg 将其移到前台运行。 
+2. 后台运行：可使用 jobs -l 查看，也可使用  fg 将其移到前台运行。 
+    ```bash
+    tail -f ping.log
+    ```
 
-```
-tail -f ping.log
-```
+​	（查看日志）
 
-（查看日志）
+### 14 查找可执行文件 `which`
 
-### 14、查找可执行文件 which
+**作用：**
 
 在 linux 要查找某个文件，但不知道放在哪里了，可以使用下面的一些命令来搜索：
 
-```
+```bash
 which     查看可执行文件的位置。
 whereis 查看文件的位置。
 locate  配合数据库查看文件位置。
@@ -450,45 +439,47 @@ which 是在 PATH 就是指定的路径中，搜索某个系统命令的位置�
 
 **常用参数：**
 
-```
+```bash
 -n 　指定文件名长度，指定的长度必须大于或等于所有文件中最长的文件名。
 ```
 
 **实例：**
 
-（1）查看 ls 命令是否存在，执行哪个
+1. 查看 ls 命令是否存在，执行哪个
 
-```
-which ls
-```
+    ```bash
+    which ls
+    ```
 
-（2）查看 which
+2. 查看 which
 
-```
-which which
-```
+    ```bash
+    which which
+    ```
 
-（3）查看 cd
+3. 查看 cd
 
-```
-which cd（显示不存在，因为 cd 是内建命令，而 which 查找显示是 PATH 中的命令）
-```
+    ```bash
+    which cd（显示不存在，因为 cd 是内建命令，而 which 查找显示是 PATH 中的命令）
+    ```
 
-查看当前 PATH 配置：
+4. 查看当前 PATH 配置：
 
-```
-echo $PATH
-```
+    ```bash
+    echo $PATH
+    ```
 
 或使用 env 查看所有环境变量及对应值
 
-### 15、查找文件 whereis
+### 15 查找文件 `whereis`
+
+**作用：**
 
 whereis  命令只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。whereis 及 locate 都是基于系统内建的数据库进行搜索，因此效率很高，而find则是遍历硬盘查找文件。
 
 **常用参数：**
 
-```
+```bash
 -b   定位可执行文件。
 -m   定位帮助文件。
 -s   定位源代码文件。
@@ -497,25 +488,25 @@ whereis  命令只能用于程序名的搜索，而且只搜索二进制文件�
 
 **实例：**
 
-（1）查找 locate 程序相关文件
+1. 查找 locate 程序相关文件
 
-```
-whereis locate
-```
+    ```bash
+    whereis locate
+    ```
 
-（2）查找 locate 的源码文件
+2. 查找 locate 的源码文件
 
-```
-whereis -s locate
-```
+    ```bash
+    whereis -s locate
+    ```
 
-（3）查找 lcoate 的帮助文件
+3. 查找 lcoate 的帮助文件
 
-```
-whereis -m locate
-```
+    ```bash
+    whereis -m locate
+    ```
 
-### 16、数据库查找 locate
+### 16 数据库查找 `locate`
 
 locate 通过搜寻系统内建文档数据库达到快速找到档案，数据库由 updatedb 程序来更新，updatedb 是由 cron  daemon 周期性调用的。默认情况下 locate 命令在搜寻数据库时比由整个由硬盘资料来搜寻资料来得快，但较差劲的是 locate  所找到的档案若是最近才建立或 刚更名的，可能会找不到，在内定值中，updatedb 每天会跑一次，可以由修改 crontab 来更新设定值  (etc/crontab)。
 
@@ -523,7 +514,7 @@ locate 与 find 命令相似，可以使用如 *、? 等进行正则匹配查找
 
 **常用参数：**
 
-```
+```bash
 -l num（要显示的行数）
 -f   将特定的档案系统排除在外，如将proc排除在外
 -r   使用正则运算式做为寻找条件
@@ -531,37 +522,37 @@ locate 与 find 命令相似，可以使用如 *、? 等进行正则匹配查找
 
 **实例：**
 
-（1）查找和 pwd 相关的所有文件(文件名中包含 pwd）
+1. 查找和 pwd 相关的所有文件(文件名中包含 pwd）
 
-```
-locate pwd
-```
+    ```bash
+    locate pwd
+    ```
 
-（2）搜索 etc 目录下所有以 sh 开头的文件
+2. 搜索 etc 目录下所有以 sh 开头的文件
 
-```
-locate /etc/sh
-```
+    ```bash
+    locate /etc/sh
+    ```
 
-（3）查找 /var 目录下，以 reason 结尾的文件
+3. 查找 /var 目录下，以 reason 结尾的文件
 
-```
-locate -r '^/var.*reason$'（其中.表示一个字符，*表示任务多个；.*表示任意多个字符）
-```
+    ```bash
+    locate -r '^/var.*reason$'（其中.表示一个字符，*表示任务多个；.*表示任意多个字符）
+    ```
 
-### 17、文件树查找文件 find
+### 17 文件树查找文件 `find`
 
 用于在文件树中查找文件，并作出相应的处理。
 
-命令格式：
+**命令格式：**
 
-```
+```bash
 find pathname -options [-print -exec -ok ...]
 ```
 
-命令参数：
+**命令参数：**
 
-```
+```bash
 pathname: find命令所查找的目录路径。例如用.来表示当前目录，用/来表示系统根目录。
 -print： find命令将匹配的文件输出到标准输出。
 -exec： find命令对匹配的文件执行该参数所给出的shell命令。相应命令的形式为'command' {  } \;，注意{   }和\；之间的空格。
@@ -598,110 +589,109 @@ pathname: find命令所查找的目录路径。例如用.来表示当前目录�
 
 **实例：**
 
-（1）查找 48 小时内修改过的文件
+1. 查找 48 小时内修改过的文件
 
-```
-find -atime -2
-```
+    ```bash
+    find -atime -2
+    ```
 
-（2）在当前目录查找 以 .log 结尾的文件。  .  代表当前目录
+2. 在当前目录查找 以 .log 结尾的文件。  .  代表当前目录
 
-```
-find ./ -name '*.log'
-```
+    ```bash
+    find ./ -name '*.log'
+    ```
 
-（3）查找 /opt 目录下 权限为 777 的文件
+3. 查找 /opt 目录下 权限为 777 的文件
 
-```
-find /opt -perm 777
-```
+    ```bash
+    find /opt -perm 777
+    ```
 
-（4）查找大于 1K 的文件
+4. 查找大于 1K 的文件
 
-```
-find -size +1000c
-```
+    ```bash
+    find -size +1000c
+    ```
 
 查找等于 1000 字符的文件
 
-```
-find -size 1000c 
-```
+    ```bash
+    find -size 1000c 
+    ```
 
 -exec 参数后面跟的是 command 命令，它的终止是以 ; 为结束标志的，所以这句命令后面的分号是不可缺少的，考虑到各个系统中分号会有不同的意义，所以前面加反斜杠。{} 花括号代表前面find查找出来的文件名。
 
 **实例：**
 
-（5）在当前目录中查找更改时间在10日以前的文件并删除它们(无提醒）
+5. 在当前目录中查找更改时间在10日以前的文件并删除它们(无提醒）
 
-```
-find . -type f -mtime +10 -exec rm -f {} \;
-```
+    ```bash
+    find . -type f -mtime +10 -exec rm -f {} \;
+    ```
 
-（6）当前目录中查找所有文件名以.log结尾、更改时间在5日以上的文件，并删除它们，只不过在删除之前先给出提示。 按y键删除文件，按n键不删除
+6. 当前目录中查找所有文件名以.log结尾、更改时间在5日以上的文件，并删除它们，只不过在删除之前先给出提示。 按y键删除文件，按n键不删除
 
-```
-find . -name '*.log' mtime +5 -ok -exec rm {} \;
-```
+    ```bash
+    find . -name '*.log' mtime +5 -ok -exec rm {} \;
+    ```
 
-（7）当前目录下查找文件名以 passwd 开头，内容包含 "pkg" 字符的文件
+7. 当前目录下查找文件名以 passwd 开头，内容包含 "pkg" 字符的文件
 
-```
-find . -f -name 'passwd*' -exec grep "pkg" {} \;
-```
+    ```bash
+    find . -f -name 'passwd*' -exec grep "pkg" {} \;
+    ```
 
-（8）用 exec 选项执行 cp 命令 
+8. 用 exec 选项执行 cp 命令 
 
-```
-find . -name '*.log' -exec cp {} test3 \;
-```
-
--xargs find 命令把匹配到的文件传递给 xargs 命令，而 xargs 命令每次只获取一部分文件而不是全部，不像 -exec 选项那样。这样它可以先处理最先获取的一部分文件，然后是下一批，并如此继续下去。
+    ```bash
+    find . -name '*.log' -exec cp {} test3 \;
+    ```
+    -xargs find 命令把匹配到的文件传递给 xargs 命令，而 xargs 命令每次只获取一部分文件而不是全部，不像 -exec 选项那样。这样它可以先处理最先获取的一部分文件，然后是下一批，并如此继续下去。
 
 实例：
 
-（9）查找当前目录下每个普通文件，然后使用 xargs 来判断文件类型
+9. 查找当前目录下每个普通文件，然后使用 xargs 来判断文件类型
 
-```
-find . -type f -print | xargs file
-```
+    ```bash
+    find . -type f -print | xargs file
+    ```
 
-（10）查找当前目录下所有以 js 结尾的并且其中包含 'editor' 字符的普通文件
+10. 查找当前目录下所有以 js 结尾的并且其中包含 'editor' 字符的普通文件
 
-```
-find . -type f -name "*.js" -exec grep -lF 'ueditor' {} \;
-find -type f -name '*.js' | xargs grep -lF 'editor'
-```
+    ```bash
+    find . -type f -name "*.js" -exec grep -lF 'ueditor' {} \;
+    find -type f -name '*.js' | xargs grep -lF 'editor'
+    ```
 
-（11）利用 xargs 执行 mv 命令
+11. 利用 xargs 执行 mv 命令
 
-```
-find . -name "*.log" | xargs -i mv {} test4
-```
+    ```bash
+    find . -name "*.log" | xargs -i mv {} test4
+    ```
 
-（12）用 grep 命令在当前目录下的所有普通文件中搜索 hostnames 这个词，并标出所在行：
+12. 用 grep 命令在当前目录下的所有普通文件中搜索 hostnames 这个词，并标出所在行：
 
-```
-find . -name \*(转义） -type f -print | xargs grep -n 'hostnames'
-```
+    ```bash
+    find . -name \*(转义） -type f -print | xargs grep -n 'hostnames'
+    ```
 
-（13）查找当前目录中以一个小写字母开头，最后是 4 到 9 加上 .log 结束的文件：
+13. 查找当前目录中以一个小写字母开头，最后是 4 到 9 加上 .log 结束的文件：
 
-```
-find . -name '[a-z]*[4-9].log' -print
-```
+    ```bash
+    find . -name '[a-z]*[4-9].log' -print
+    ```
 
-（14）在 test 目录查找不在 test4 子目录查找
+14. 在 test 目录查找不在 test4 子目录查找
 
-```
-find test -path 'test/test4' -prune -o -print
-```
+    ```bash
+    find test -path 'test/test4' -prune -o -print
+    ```
 
-（15）实例1：查找更改时间比文件 log2012.log新但比文件 log2017.log 旧的文件
+15. 实例1：查找更改时间比文件 log2012.log新但比文件 log2017.log 旧的文件
 
-```
-find -newer log2012.log ! -newer log2017.log
-```
+    ```bash
+    find -newer log2012.log ! -newer log2017.log
+    ```
 
 **使用 depth 选项：**
 
@@ -709,11 +699,11 @@ depth 选项可以使 find 命令向磁带上备份文件系统时，希望首�
 
 实例：find 命令从文件系统的根目录开始，查找一个名为 CON.FILE 的文件。 它将首先匹配所有的文件然后再进入子目录中查找
 
-```
+```bash
 find / -name "CON.FILE" -depth -print
 ```
 
-### 18、修改访问权限 chmod
+### 18 修改访问权限 `chmod`
 
 用于改变 linux 系统文件或目录的访问权限。用它控制文件或目录的访问权限。该命令有两种用法。一种是包含字母和操作符表达式的文字设定法；另一种是包含数字的数字设定法。
 
@@ -721,7 +711,7 @@ find / -name "CON.FILE" -depth -print
 
 以文件 log2012.log 为例：
 
-```
+```bash
 -rw-r--r-- 1 root root 296K 11-13 06:03 log2012.log
 ```
 
@@ -729,14 +719,14 @@ find / -name "CON.FILE" -depth -print
 
 常用参数：
 
-```
+```bash
 -c 当发生改变时，报告处理信息
 -R 处理指定目录以及其子目录下所有文件
 ```
 
 权限范围：
 
-```
+```bash
 u ：目录或者文件的当前的用户
 g ：目录或者文件的当前的群组
 o ：除了目录或者文件的当前用户或群组之外的用户或者群组
@@ -745,7 +735,7 @@ a ：所有的用户及群组
 
 权限代号：
 
-```
+```bash
 r ：读权限，用数字4表示
 w ：写权限，用数字2表示
 x ：执行权限，用数字1表示
@@ -755,31 +745,31 @@ s ：特殊权限
 
 实例：
 
-（1）增加文件 t.log 所有用户可执行权限
+1. 增加文件 t.log 所有用户可执行权限
 
-```
-chmod a+x t.log
-```
+    ```bash
+    chmod a+x t.log
+    ```
 
-（2）撤销原来所有的权限，然后使拥有者具有可读权限,并输出处理信息
+2. 撤销原来所有的权限，然后使拥有者具有可读权限,并输出处理信息
 
-```
-chmod u=r t.log -c
-```
+    ```bash
+    chmod u=r t.log -c
+    ```
 
-（3）给 file 的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执行(1)的权限
+3. 给 file 的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执行(1)的权限
 
-```
-chmod 751 t.log -c（或者：chmod u=rwx,g=rx,o=x t.log -c)
-```
+    ```bash
+    chmod 751 t.log -c（或者：chmod u=rwx,g=rx,o=x t.log -c)
+    ```
 
-（4）将 test 目录及其子目录所有文件添加可读权限
+4. 将 test 目录及其子目录所有文件添加可读权限
 
-```
-chmod u+r,g+r,o+r -R text/ -c
-```
+    ```bash
+    chmod u+r,g+r,o+r -R text/ -c
+    ```
 
-19、tar 命令
+### 19  加压缩命令`tar`
 
 用来压缩和解压文件。tar 本身不具有压缩功能，只具有打包功能，有关压缩及解压是调用其它的功能来完成。
 
@@ -787,7 +777,7 @@ chmod u+r,g+r,o+r -R text/ -c
 
 **常用参数：**
 
-```
+```bash
 -c 建立新的压缩文件
 -f 指定压缩文件
 -r 添加文件到已经压缩文件包中
@@ -802,7 +792,7 @@ chmod u+r,g+r,o+r -R text/ -c
 
 有关 gzip 及 bzip2 压缩:
 
-```
+```bash
 gzip 实例：压缩 gzip fileName .tar.gz 和.tgz  解压：gunzip filename.gz 或 gzip -d filename.gz
           对应：tar zcvf filename.tar.gz     tar zxvf filename.tar.gz
 
@@ -812,64 +802,64 @@ bz2实例：压缩 bzip2 -z filename .tar.bz2 解压：bunzip filename.bz2或bzi
 
 **实例：**
 
-（1）将文件全部打包成 tar 包
+1. 将文件全部打包成 tar 包
 
-```
-tar -cvf log.tar 1.log,2.log 或tar -cvf log.*
-```
+    ```bash
+    tar -cvf log.tar 1.log,2.log 或tar -cvf log.*
+    ```
 
-（2）将 /etc 下的所有文件及目录打包到指定目录，并使用 gz 压缩
+2. 将 /etc 下的所有文件及目录打包到指定目录，并使用 gz 压缩
 
-```
-tar -zcvf /tmp/etc.tar.gz /etc
-```
+    ```bash
+    tar -zcvf /tmp/etc.tar.gz /etc
+    ```
 
-（3）查看刚打包的文件内容（一定加z，因为是使用 gzip 压缩的）
+3. 查看刚打包的文件内容（一定加z，因为是使用 gzip 压缩的）
 
-```
-tar -ztvf /tmp/etc.tar.gz
-```
+    ```bash
+    tar -ztvf /tmp/etc.tar.gz
+    ```
 
-（4）要压缩打包 /home, /etc ，但不要 /home/dmtsai
+4. 要压缩打包 /home, /etc ，但不要 /home/dmtsai
 
-```
-tar --exclude /home/dmtsai -zcvf myfile.tar.gz /home/* /etc
-```
+    ```bash
+    tar --exclude /home/dmtsai -zcvf myfile.tar.gz /home/* /etc
+    ```
 
-### 20、指定用户或组 chown
+### 20 指定用户或组 `chown`
 
 chown 将指定文件的拥有者改为指定的用户或组，用户可以是用户名或者用户 ID；组可以是组名或者组 ID；文件是以空格分开的要改变权限的文件列表，支持通配符。
 
-```
+```bash
 -c 显示更改的部分的信息
 -R 处理指定目录及子目录
 ```
 
 **实例：**
 
-（1）改变拥有者和群组 并显示改变信息
+1. 改变拥有者和群组 并显示改变信息
 
-```
-chown -c mail:mail log2012.log
-```
+    ```bash
+    chown -c mail:mail log2012.log
+    ```
 
-（2）改变文件群组
+2. 改变文件群组
 
-```
-chown -c :mail t.log
-```
+    ```bash
+    chown -c :mail t.log
+    ```
 
-（3）改变文件夹及子文件目录属主及属组为 mail
+3. 改变文件夹及子文件目录属主及属组为 mail
 
-```
-chown -cR mail: test/
-```
+    ```bash
+    chown -cR mail: test/
+    ```
 
-### 21、显示磁盘空间使用情况 df
+### 21 显示磁盘空间使用情况 `df`
 
 显示磁盘空间使用情况。获取硬盘被占用了多少空间，目前还剩下多少空间等信息，如果没有文件名被指定，则所有当前被挂载的文件系统的可用空间将被显示。默认情况下，磁盘空间将以 1KB 为单位进行显示，除非环境变量 POSIXLY_CORRECT 被指定，那样将以512字节为单位进行显示：
 
-```
+```bash
 -a 全部文件系统列表
 -h 以方便阅读的方式显示信息
 -i 显示inode信息
@@ -880,31 +870,31 @@ chown -cR mail: test/
 
 **实例：**
 
-（1）显示磁盘使用情况
+1. 显示磁盘使用情况
 
-```
-df -l
-```
+    ```bash
+    df -l
+    ```
 
-（2）以易读方式列出所有文件系统及其类型
+2. 以易读方式列出所有文件系统及其类型
 
-```
-df -haT
-```
+    ```bash
+    df -haT
+    ```
 
-### 22、查看使用空间 du
+### 22 查看使用空间 `du`
 
 du 命令也是查看使用空间的，但是与 df 命令不同的是 Linux du 命令是对文件和目录磁盘使用的空间的查看：
 
-命令格式：
+**命令格式：**
 
-```
+```bash
 du [选项] [文件]
 ```
 
 **常用参数：**
 
-```
+```bash
 -a 显示目录中所有文件大小
 -k 以KB为单位显示文件大小
 -m 以MB为单位显示文件大小
@@ -916,31 +906,31 @@ du [选项] [文件]
 
 **实例：**
 
-（1）以易读方式显示文件夹内及子文件夹大小
+1. 以易读方式显示文件夹内及子文件夹大小
 
-```
-du -h scf/
-```
+    ```bash
+    du -h scf/
+    ```
 
-（2）以易读方式显示文件夹内所有文件大小
+2. 以易读方式显示文件夹内所有文件大小
 
-```
-du -ah scf/
-```
+    ```bash
+    du -ah scf/
+    ```
 
-（3）显示几个文件或目录各自占用磁盘空间的大小，还统计它们的总和
+3. 显示几个文件或目录各自占用磁盘空间的大小，还统计它们的总和
 
-```
-du -hc test/ scf/
-```
+    ```bash
+    du -hc test/ scf/
+    ```
 
-（4）输出当前目录下各个子目录所使用的空间
+4. 输出当前目录下各个子目录所使用的空间
 
-```
-du -hc --max-depth=1 scf/
-```
+    ```bash
+    du -hc --max-depth=1 scf/
+    ```
 
-### 23、创建软链接 ln
+### 23 创建软链接 `ln`
 
 功能是为文件在另外一个位置建立一个同步的链接，当在不同目录需要该问题时，就不需要为每一个目录创建同样的文件，通过 ln 创建的链接（link）减少磁盘占用量。
 
@@ -967,7 +957,7 @@ du -hc --max-depth=1 scf/
 
 **常用参数：**
 
-```
+```bash
 -b 删除，覆盖以前建立的链接
 -s 软链接（符号链接）
 -v 显示详细处理过程
@@ -975,31 +965,31 @@ du -hc --max-depth=1 scf/
 
 **实例：**
 
-（1）给文件创建软链接，并显示操作信息
+1. 给文件创建软链接，并显示操作信息
 
-```
-ln -sv source.log link.log
-```
+    ```bash
+    ln -sv source.log link.log
+    ```
 
-（2）给文件创建硬链接，并显示操作信息
+2. 给文件创建硬链接，并显示操作信息
 
-```
-ln -v source.log link1.log
-```
+    ```bash
+    ln -v source.log link1.log
+    ```
 
-（3）给目录创建软链接
+3. 给目录创建软链接
 
-```
-ln -sv /opt/soft/test/test3 /opt/soft/test/test5
-```
+    ```bash
+    ln -sv /opt/soft/test/test3 /opt/soft/test/test5
+    ```
 
-### 24、显示或设定时间 date
+### 24 显示或设定时间 `date`
 
 显示或设定系统的日期与时间。
 
 命令参数：
 
-```
+```bash
 -d<字符串> 　显示字符串所指的日期与时间。字符串前后必须加上双引号。
 -s<字符串> 　根据字符串来设置日期与时间。字符串前后必须加上双引号。
 -u 　显示GMT。
@@ -1019,31 +1009,31 @@ ln -sv /opt/soft/test/test3 /opt/soft/test/test5
 
 **实例：**
 
-（1）显示下一天
+1. 显示下一天
 
-```
-date +%Y%m%d --date="+1 day"  //显示下一天的日期
-```
+    ```bash
+    date +%Y%m%d --date="+1 day"  //显示下一天的日期
+    ```
 
-（2）-d参数使用
+2. -d参数使用
 
-```
-date -d "nov 22"  今年的 11 月 22 日是星期三
-date -d '2 weeks' 2周后的日期
-date -d 'next monday' (下周一的日期)
-date -d next-day +%Y%m%d（明天的日期）或者：date -d tomorrow +%Y%m%d
-date -d last-day +%Y%m%d(昨天的日期) 或者：date -d yesterday +%Y%m%d
-date -d last-month +%Y%m(上个月是几月)
-date -d next-month +%Y%m(下个月是几月)
-```
+    ```bash
+    date -d "nov 22"  今年的 11 月 22 日是星期三
+    date -d '2 weeks' 2周后的日期
+    date -d 'next monday' (下周一的日期)
+    date -d next-day +%Y%m%d（明天的日期）或者：date -d tomorrow +%Y%m%d
+    date -d last-day +%Y%m%d(昨天的日期) 或者：date -d yesterday +%Y%m%d
+    date -d last-month +%Y%m(上个月是几月)
+    date -d next-month +%Y%m(下个月是几月)
+    ```
 
-### 25、显示日历 cal
+### 25 显示日历 `cal`
 
 可以用户显示公历（阳历）日历如只有一个参数，则表示年份(1-9999)，如有两个参数，则表示月份和年份：
 
 常用参数：
 
-```
+```bash
 -3 显示前一月，当前月，后一月三个月的日历
 -m 显示星期一为第一列
 -j 显示在当前年第几天
@@ -1052,39 +1042,39 @@ date -d next-month +%Y%m(下个月是几月)
 
 **实例：**
 
-（1）显示指定年月日期
+1. 显示指定年月日期
 
-```
-cal 9 2012
-```
+    ```bash
+    cal 9 2012
+    ```
 
-（2）显示2013年每个月日历
+2. 显示2013年每个月日历
 
-```
-cal -y 2013
-```
+    ```bash
+    cal -y 2013
+    ```
 
-（3）将星期一做为第一列,显示前中后三月
+3. 将星期一做为第一列,显示前中后三月
 
-```
-cal -3m
-```
+    ```bash
+    cal -3m
+    ```
 
-### 26、文本搜索 grep
+### 26 文本搜索 `grep`
 
 强大的文本搜索命令，grep(Global Regular Expression Print) 全局正则表达式搜索。
 
 grep 的工作方式是这样的，它在一个或多个文件中搜索字符串模板。如果模板包括空格，则必须被引用，模板后的所有字符串被看作文件名。搜索的结果被送到标准输出，不影响原文件内容。
 
-命令格式：
+**命令格式：**
 
-```
+```bash
 grep [option] pattern file|dir
 ```
 
-常用参数：
+**常用参数：**
 
-```
+```bash
 -A n --after-context显示匹配字符后n行
 -B n --before-context显示匹配字符前n行
 -C n --context 显示匹配字符前后n行
@@ -1096,9 +1086,9 @@ grep [option] pattern file|dir
 -R 递归查找文件夹
 ```
 
-grep 的规则表达式:
+**grep 的规则表达式:**
 
-```
+```bash
 ^  #锚定行的开始 如：'^grep'匹配所有以grep开头的行。 
 $  #锚定行的结束 如：'grep$'匹配所有以grep结尾的行。 
 .  #匹配一个非换行符的字符 如：'gr.p'匹配gr后接一个任意字符，然后是p。  
@@ -1119,47 +1109,47 @@ x\{m,n\}  #重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5
 
 **实例：**
 
-（1）查找指定进程
+1. 查找指定进程
 
-```
-ps -ef | grep svn
-```
+    ```bash
+    ps -ef | grep svn
+    ```
 
-（2）查找指定进程个数
+2. 查找指定进程个数
 
-```
-ps -ef | grep svn -c
-```
+    ```bash
+    ps -ef | grep svn -c
+    ```
 
-（3）从文件中读取关键词
+3. 从文件中读取关键词
 
-```
-cat test1.txt | grep -f key.log
-```
+    ```bash
+    cat test1.txt | grep -f key.log
+    ```
 
-（4）从文件夹中递归查找以grep开头的行，并只列出文件
+4. 从文件夹中递归查找以grep开头的行，并只列出文件
 
-```
-grep -lR '^grep' /tmp
-```
+    ```bash
+    grep -lR '^grep' /tmp
+    ```
 
-（5）查找非x开关的行内容
+5. 查找非x开关的行内容
 
-```
-grep '^[^x]' test.txt
-```
+    ```bash
+    grep '^[^x]' test.txt
+    ```
 
-（6）显示包含 ed 或者 at 字符的内容行
+6. 显示包含 ed 或者 at 字符的内容行
 
-```
-grep -E 'ed|at' test.txt
-```
+    ```bash
+    grep -E 'ed|at' test.txt
+    ```
 
-### 27、文本统计 wc
+### 27 文本统计 `wc`
 
 wc(word count)功能为统计指定的文件中字节数、字数、行数，并将统计结果输出
 
-命令格式：
+**命令格式：**
 
 ```bash
 wc [option] file..
@@ -1176,39 +1166,39 @@ wc [option] file..
 
 **实例：**
 
-（1）查找文件的  行数 单词数 字节数 文件名
+1. 查找文件的  行数 单词数 字节数 文件名
 
-```
-wc text.txt
-```
+    ```bash
+    wc text.txt
+    ```
 
- 结果：
+    结果：
 
-```
-7     8     70     test.txt
-```
+    ```bash
+    7     8     70     test.txt
+    ```
 
-（2）统计输出结果的行数
+2. 统计输出结果的行数
 
-```
-cat test.txt | wc -l
-```
+    ```bash
+    cat test.txt | wc -l
+    ```
 
-### 28、查看运行进程 ps
+### 28 查看运行进程 `ps`
 
 ps(process status)，用来查看当前运行的进程状态，一次性查看，如果需要动态连续结果使用 top
 
-linux上进程有5种状态:
+**linux上进程有5种状态:**
 
-- \1. 运行(正在运行或在运行队列中等待)
-- \2. 中断(休眠中, 受阻, 在等待某个条件的形成或接受到信号)
-- \3. 不可中断(收到信号不唤醒和不可运行, 进程必须等待直到有中断发生)
-- \4. 僵死(进程已终止, 但进程描述符存在, 直到父进程调用wait4()系统调用后释放)
-- \5. 停止(进程收到SIGSTOP, SIGSTP, SIGTIN, SIGTOU信号后停止运行运行)
+1. 运行(正在运行或在运行队列中等待)
+2. 中断(休眠中, 受阻, 在等待某个条件的形成或接受到信号)
+3. 不可中断(收到信号不唤醒和不可运行, 进程必须等待直到有中断发生)
+4. 僵死(进程已终止, 但进程描述符存在, 直到父进程调用wait4()系统调用后释放)
+5. 停止(进程收到SIGSTOP, SIGSTP, SIGTIN, SIGTOU信号后停止运行运行)
 
-ps 工具标识进程的5种状态码:
+**ps 工具标识进程的5种状态码:**
 
-```
+```bash
 D 不可中断 uninterruptible sleep (usually IO)
 R 运行 runnable (on run queue)
 S 中断 sleeping
@@ -1218,7 +1208,7 @@ Z 僵死 a defunct (”zombie”) process
 
 **命令参数：**
 
-```
+```bash
 -A 显示所有进程
 a 显示所有进程
 -a 显示同一终端下所有进程
@@ -1231,48 +1221,48 @@ r 显示当前终端运行的进程
 
 **实例：**
 
-（1）显示当前所有进程环境变量及进程间关系
+1. 显示当前所有进程环境变量及进程间关系
 
-```
-ps -ef
-```
+    ```bash
+    ps -ef
+    ```
 
-（2）显示当前所有进程
+2. 显示当前所有进程
 
-```
-ps -A
-```
+    ```bash
+    ps -A
+    ```
 
-（3）与grep联用查找某进程
+3. 与grep联用查找某进程
 
-```
-ps -aux | grep apache
-```
+    ```bash
+    ps -aux | grep apache
+    ```
 
-（4）找出与 cron 与 syslog 这两个服务有关的 PID 号码
+4. 找出与 cron 与 syslog 这两个服务有关的 PID 号码
 
-```
-ps aux | grep '(cron|syslog)'
-```
+    ```bash
+    ps aux | grep '(cron|syslog)'
+    ```
 
-29、top 命令
+### 29 `top` 命令
 
 显示当前系统正在执行的进程的相关信息，包括进程 ID、内存占用率、CPU 占用率等
 
 **常用参数：**
 
-```
+```bash
 -c 显示完整的进程命令
 -s 保密模式
 -p <进程号> 指定进程显示
 -n <次数>循环显示次数
 ```
 
-实例：
+**实例：**
 
 **（1）**
 
-```
+```bash
 top - 14:06:23 up 70 days, 16:44,  2 users,  load average: 1.25, 1.32, 1.35
 Tasks: 206 total,   1 running, 205 sleeping,   0 stopped,   0 zombie
 Cpu(s):  5.9%us,  3.4%sy,  0.0%ni, 90.4%id,  0.0%wa,  0.0%hi,  0.2%si,  0.0%st
@@ -1302,7 +1292,7 @@ load average数据是每隔5秒钟检查一次活跃的进程数，然后按特�
 
 **第三行，cpu状态信息，具体属性说明如下：**
 
-```
+```bash
 5.9%us — 用户空间占用CPU的百分比。
 3.4% sy — 内核空间占用CPU的百分比。
 0.0% ni — 改变过优先级的进程占用CPU的百分比
@@ -1314,9 +1304,9 @@ load average数据是每隔5秒钟检查一次活跃的进程数，然后按特�
 
 **备注：**在这里CPU的使用比率和windows概念不同，需要理解linux系统用户空间和内核空间的相关知识！
 
-第四行，内存状态，具体信息如下：
+**第四行，内存状态，具体信息如下：**
 
-```
+```bash
 32949016k total — 物理内存总量（32GB）
 14411180k used — 使用中的内存总量（14GB）
 18537836k free — 空闲内存总量（18GB）
@@ -1325,7 +1315,7 @@ load average数据是每隔5秒钟检查一次活跃的进程数，然后按特�
 
 **第五行，swap交换分区信息，具体信息说明如下：**
 
-```
+```bash
 32764556k total — 交换区总量（32GB）
 0k used — 使用的交换区总量（0K）
 32764556k free — 空闲交换区总量（32GB）
@@ -1336,7 +1326,7 @@ load average数据是每隔5秒钟检查一次活跃的进程数，然后按特�
 
 **第七行以下：各进程（任务）的状态监控，项目列信息说明如下：**
 
-```
+```bash
 PID — 进程id
 USER — 进程所有者
 PR — 进程优先级
@@ -1353,7 +1343,7 @@ COMMAND — 进程名称（命令名/命令行）
 
 **top 交互命令**
 
-```
+```bash
 h 显示top交互命令帮助信息
 c 切换显示命令名称和完整命令行
 m 以内存使用率排序
@@ -1363,13 +1353,13 @@ W 将当前设置写入~/.toprc文件中
 o或者O 改变显示项目的顺序
 ```
 
-### 30、关闭进程 kill
+### 30 关闭进程 `kill`
 
 发送指定的信号到相应进程。不指定型号将发送SIGTERM（15）终止指定进程。如果任无法终止该程序可用"-KILL"  参数，其发送的信号为SIGKILL(9) ，将强制结束进程，使用ps命令或者jobs  命令可以查看进程号。root用户将影响用户的进程，非root用户只能影响自己的进程。
 
 **常用参数：**
 
-```
+```bash
 -l  信号，若果不加信号的编号参数，则使用“-l”参数会列出全部的信号名称
 -a  当处理当前进程时，不限制命令名和进程号的对应关系
 -p  指定kill 命令只打印相关进程的进程号，而不发送任何信号
@@ -1379,19 +1369,19 @@ o或者O 改变显示项目的顺序
 
 **实例：**
 
-（1）先使用ps查找进程pro1，然后用kill杀掉
+1. 先使用ps查找进程pro1，然后用kill杀掉
 
-```
-kill -9 $(ps -ef | grep pro1)
-```
+    ```bash
+    kill -9 $(ps -ef | grep pro1)
+    ```
 
-### 31、显示内存使用情况 free
+### 31 显示内存使用情况 `free`
 
 显示系统内存使用情况，包括物理内存、交互区内存(swap)和内核缓冲区内存。
 
 **命令参数：**
 
-```
+```bash
 -b 以Byte显示内存使用情况
 -k 以kb为单位显示内存使用情况
 -m 以mb为单位显示内存使用情况
@@ -1402,28 +1392,28 @@ kill -9 $(ps -ef | grep pro1)
 
 **实例：**
 
-（1）显示内存使用情况
+1. 显示内存使用情况
 
-```
-free
-free -k
-free -m
-```
+    ```bash
+    free
+    free -k
+    free -m
+    ```
 
-（2）以总和的形式显示内存的使用信息
+2. 以总和的形式显示内存的使用信息
 
-```
-free -t
-```
+    ```bash
+    free -t
+    ```
 
-（3）周期性查询内存使用情况
+3. 周期性查询内存使用情况
 
-```
-free -s 10
-```
+    ```bash
+    free -s 10
+    ```
 
 
-### 32、显示端口占用情况 netstat
+### 32 显示端口占用情况 `netstat`
 
 Linux netstat 命令用于显示网络状态。
 利用 netstat 指令可让你得知整个 Linux 系统的网络情况。
@@ -1462,7 +1452,7 @@ netstat [-acCeFghilMnNoprstuvVwx][-A<网络类型>][--ip]
 ```
 
 **实例：**
-```bash
-# 查看端口的使用情况
-netstat -tlunp
-```
+    ```bash
+    # 查看端口的使用情况
+    netstat -tlunp
+    ```
