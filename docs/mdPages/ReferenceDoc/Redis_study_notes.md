@@ -43,13 +43,9 @@
 
 
 
-
-
 ## 1.2 什么是NoSQL
 
-`NoSQL = Not Only SQL（不仅仅是SQL）`
-
-Not Only Structured Query Language
+`NoSQL = Not Only SQL（不仅仅是SQL）`Not Only Structured Query Language
 
 关系型数据库：列+行，同一个表下数据的结构是一样的。
 
@@ -62,7 +58,7 @@ NoSQL泛指非关系型数据库，随着web2.0互联网的诞生，传统的关
 1. 方便扩展（数据之间没有关系，很好扩展！）
 2. 大数据量高性能（Redis一秒可以写8万次，读11万次，NoSQL的缓存记录级，是一种细粒度的缓存，性能会比较高！）
 3. 数据类型是多样型的！（不需要事先设计数据库，随取随用）
-4. 传统的 RDBMS 和 NoSQL
+4. 传统的 RDBMS 和 NoSQL比较：
 
 | 传统的 RDBMS(关系型数据库)         | **Nosql**                                            |
 | ---------------------------------- | ---------------------------------------------------- |
@@ -89,42 +85,7 @@ NoSQL泛指非关系型数据库，随着web2.0互联网的诞生，传统的关
 
 真正在公司中的实践：NoSQL + RDBMS 一起使用才是最强的。
 
-## 1.5 阿里巴巴演进分析
-
-![1](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208140705925.png)
-
-![在这里插入图片描述](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208140705952.png)
-
-商品信息
-
-- 一般存放在关系型数据库：Mysql,阿里巴巴使用的Mysql都是经过内部改动的。
-
-商品描述、评论(文字居多)
-
-- 文档型数据库：MongoDB
-
-图片
-
-- 分布式文件系统 FastDFS
-- 淘宝：TFS
-- Google: GFS
-- Hadoop: HDFS
-- 阿里云: oss
-
-商品关键字 用于搜索
-
-- 搜索引擎：solr,elasticsearch
-- 阿里：Isearch 多隆
-
-商品热门的波段信息
-
-- 内存数据库：Redis，Memcache
-
-商品交易，外部支付接口
-
-- 第三方应用
-
-## 1.6 NoSQL四大分类
+## 1.5 NoSQL四大分类
 
 > KV键值对
 
@@ -172,230 +133,228 @@ Redis（Remote Dictionary Server )，即远程字典服务。
 
 ## 2.2 Redis能该干什么
 
-### 1、缓存
+1. 缓存
 
-String类型
+   String类型
 
-例如：热点数据缓存（例如报表、明星出轨），对象缓存、全页缓存、可以提升热点数据的访问数据。
+   例如：热点数据缓存（例如报表、明星出轨），对象缓存、全页缓存、可以提升热点数据的访问数据。
 
-### 2、数据共享分布式
+2. 数据共享分布式
 
-String 类型，因为 Redis 是分布式的独立服务，可以在多个应用之间共享
+   String 类型，因为 Redis 是分布式的独立服务，可以在多个应用之间共享
 
-例如：分布式Session
+   例如：分布式Session
 
-```
-<dependency> 
- <groupId>org.springframework.session</groupId> 
- <artifactId>spring-session-data-redis</artifactId> 
-</dependency>
-```
+	```
+    <dependency> 
+     <groupId>org.springframework.session</groupId> 
+     <artifactId>spring-session-data-redis</artifactId> 
+    </dependency>
+	```
 
-### 3、分布式锁
+3. 分布式锁
 
-String 类型setnx方法，只有不存在时才能添加成功，返回true
+   String 类型setnx方法，只有不存在时才能添加成功，返回true
 
-```
-public static boolean getLock(String key) {
-    Long flag = jedis.setnx(key, "1");
-    if (flag == 1) {
-        jedis.expire(key, 10);
+    ```
+    public static boolean getLock(String key) {
+        Long flag = jedis.setnx(key, "1");
+        if (flag == 1) {
+            jedis.expire(key, 10);
+        }
+        return flag == 1;
     }
-    return flag == 1;
-}
 
-public static void releaseLock(String key) {
-    jedis.del(key);
-}
-```
+    public static void releaseLock(String key) {
+        jedis.del(key);
+    }
+    ```
 
-### 4、全局ID
+4. 全局ID
 
-int类型，incrby，利用原子性
+    int类型，incrby，利用原子性
 
-incrby userid 1000
+    incrby userid 1000
 
-分库分表的场景，一次性拿一段
+    分库分表的场景，一次性拿一段
 
-### 5、计数器
+5. 计数器
 
-int类型，incr方法
+    int类型，incr方法
 
-例如：文章的阅读量、微博点赞数、允许一定的延迟，先写入Redis再定时同步到数据库
+    例如：文章的阅读量、微博点赞数、允许一定的延迟，先写入Redis再定时同步到数据库
 
-### 6、限流
+6. 限流
 
-int类型，incr方法
+    int类型，incr方法
 
-以访问者的ip和其他信息作为key，访问一次增加一次计数，超过次数则返回false
+    以访问者的ip和其他信息作为key，访问一次增加一次计数，超过次数则返回false
 
-### 7、位统计
+7. 位统计
 
-String类型的bitcount（1.6.6的bitmap数据结构介绍）
+    String类型的bitcount（1.6.6的bitmap数据结构介绍）
 
-字符是以8位二进制存储的
+    字符是以8位二进制存储的
 
-```
-set k1 a
-setbit k1 6 1
-setbit k1 7 0
-get k1 
-/* 6 7 代表的a的二进制位的修改
-a 对应的ASCII码是97，转换为二进制数据是01100001
-b 对应的ASCII码是98，转换为二进制数据是01100010
+    ```
+    set k1 a
+    setbit k1 6 1
+    setbit k1 7 0
+    get k1 
+    /* 6 7 代表的a的二进制位的修改
+    a 对应的ASCII码是97，转换为二进制数据是01100001
+    b 对应的ASCII码是98，转换为二进制数据是01100010
 
-因为bit非常节省空间（1 MB=8388608 bit），可以用来做大数据量的统计。
-*/
-```
+    因为bit非常节省空间（1 MB=8388608 bit），可以用来做大数据量的统计。
+    */
+    ```
 
-例如：在线用户统计，留存用户统计
+    例如：在线用户统计，留存用户统计
 
-```
-setbit onlineusers 01 
-setbit onlineusers 11 
-setbit onlineusers 20
-```
+    ```
+    setbit onlineusers 01 
+    setbit onlineusers 11 
+    setbit onlineusers 20
+    ```
 
-支持按位与、按位或等等操作
+    支持按位与、按位或等等操作
 
-```
-BITOPANDdestkeykey[key...] ，对一个或多个 key 求逻辑并，并将结果保存到 destkey 。       
-BITOPORdestkeykey[key...] ，对一个或多个 key 求逻辑或，并将结果保存到 destkey 。 
-BITOPXORdestkeykey[key...] ，对一个或多个 key 求逻辑异或，并将结果保存到 destkey 。 
-BITOPNOTdestkeykey ，对给定 key 求逻辑非，并将结果保存到 destkey 。
-```
+    ```
+    BITOPANDdestkeykey[key...] ，对一个或多个 key 求逻辑并，并将结果保存到 destkey 。       
+    BITOPORdestkeykey[key...] ，对一个或多个 key 求逻辑或，并将结果保存到 destkey 。 
+    BITOPXORdestkeykey[key...] ，对一个或多个 key 求逻辑异或，并将结果保存到 destkey 。 
+    BITOPNOTdestkeykey ，对给定 key 求逻辑非，并将结果保存到 destkey 。
+    ```
 
-计算出7天都在线的用户
+    计算出7天都在线的用户
 
-```
-BITOP "AND" "7_days_both_online_users" "day_1_online_users" "day_2_online_users" ...  "day_7_online_users"
-```
+    ```
+    BITOP "AND" "7_days_both_online_users" "day_1_online_users" "day_2_online_users" ...  "day_7_online_users"
+    ```
 
-### 8、购物车
+8. 购物车
 
-String 或hash。所有String可以做的hash都可以做
+    String 或hash。所有String可以做的hash都可以做
 
-[![图片](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208140716914.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541601&idx=2&sn=c377f8b82661e300243c5482121d3c0d&chksm=9bd38ef9aca407ef06b35bec51961f3cfc51ddd35a01361c80ccc30d16513bdf8a5eaa07ec03&scene=21#wechat_redirect)
+    ![image-20220820012733042](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208200127123.png)
 
-- key：用户id；field：商品id；value：商品数量。
-- +1：hincr。-1：hdecr。删除：hdel。全选：hgetall。商品数：hlen。
+    - key：用户id；field：商品id；value：商品数量。
+    - +1：hincr。-1：hdecr。删除：hdel。全选：hgetall。商品数：hlen。
 
-### 9、用户消息时间线timeline
+9. 用户消息时间线timeline
 
-list，双向链表，直接作为timeline就好了。插入有序
+    list，双向链表，直接作为timeline就好了。插入有序
 
-### 10、消息队列
+10. 消息队列
 
-List提供了两个阻塞的弹出操作：blpop/brpop，可以设置超时时间
+    List提供了两个阻塞的弹出操作：blpop/brpop，可以设置超时时间
 
-- blpop：blpop key1 timeout 移除并获取列表的第一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
-- brpop：brpop key1 timeout 移除并获取列表的最后一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
+    - blpop：blpop key1 timeout 移除并获取列表的第一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
+    - brpop：brpop key1 timeout 移除并获取列表的最后一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。
 
-上面的操作。其实就是java的阻塞队列。学习的东西越多。学习成本越低
+    上面的操作。其实就是java的阻塞队列。学习的东西越多。学习成本越低
 
-- 队列：先进先除：rpush blpop，左头右尾，右边进入队列，左边出队列
-- 栈：先进后出：rpush brpop
+    - 队列：先进先除：rpush blpop，左头右尾，右边进入队列，左边出队列
+    - 栈：先进后出：rpush brpop
 
+11. 抽奖
 
+    自带一个随机获得值
 
-### 11、抽奖
+    ```
+    spop myset
+    ```
 
-自带一个随机获得值
+12. 点赞、签到、打卡
 
-```
-spop myset
-```
+    ![image-20220820012554501](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208200125593.png)
 
-### 12、点赞、签到、打卡
+    假如上面的微博ID是t1001，用户ID是u3001
 
-[![图片](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208140716867.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541601&idx=3&sn=1096a699699983bc3e549cc8ddc83496&chksm=9bd38ef9aca407ef7499f337ced6e2e2b4b1ff4e62bc7a9ba4da5db38e360f7e764856707ca5&scene=21#wechat_redirect)
+    用 like:t1001 来维护 t1001 这条微博的所有点赞用户
 
-假如上面的微博ID是t1001，用户ID是u3001
+    - 点赞了这条微博：sadd like:t1001 u3001
+    - 取消点赞：srem like:t1001 u3001
+    - 是否点赞：sismember like:t1001 u3001
+    - 点赞的所有用户：smembers like:t1001
+    - 点赞数：scard like:t1001
 
-用 like:t1001 来维护 t1001 这条微博的所有点赞用户
+    是不是比数据库简单多了。
 
-- 点赞了这条微博：sadd like:t1001 u3001
-- 取消点赞：srem like:t1001 u3001
-- 是否点赞：sismember like:t1001 u3001
-- 点赞的所有用户：smembers like:t1001
-- 点赞数：scard like:t1001
+13. 商品标签
 
-是不是比数据库简单多了。
+    ![image-20220820012802757](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208200128814.png)
 
-### 13、商品标签
+    老规矩，用 tags:i5001 来维护商品所有的标签。
 
-[![图片](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208140716767.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541518&idx=4&sn=312ae7c4cd919f9dde8d7965afc806e0&chksm=9bd38e96aca40780a0a4e122ea7fc93c16f52eddf270e20231aa7ddb3ac1e40050d94db004cc&scene=21#wechat_redirect)
+    - sadd tags:i5001 画面清晰细腻
+    - sadd tags:i5001 真彩清晰显示屏
+    - sadd tags:i5001 流程至极
 
-老规矩，用 tags:i5001 来维护商品所有的标签。
+14. 商品筛选
 
-- sadd tags:i5001 画面清晰细腻
-- sadd tags:i5001 真彩清晰显示屏
-- sadd tags:i5001 流程至极
+    ```
+    // 获取差集
+    sdiff set1 set2
+    // 获取交集（intersection ）
+    sinter set1 set2
+    // 获取并集
+    sunion set1 set2
+    ```
 
-### 14、商品筛选
+    ![image-20220820012712617](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208200127701.png)
 
-```
-// 获取差集
-sdiff set1 set2
-// 获取交集（intersection ）
-sinter set1 set2
-// 获取并集
-sunion set1 set2
-```
+    假如：iPhone11 上市了
 
-[![图片](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208140716865.png)](http://mp.weixin.qq.com/s?__biz=MzAxODcyNjEzNQ==&mid=2247541518&idx=4&sn=312ae7c4cd919f9dde8d7965afc806e0&chksm=9bd38e96aca40780a0a4e122ea7fc93c16f52eddf270e20231aa7ddb3ac1e40050d94db004cc&scene=21#wechat_redirect)
+    ```
+    sadd brand:apple iPhone11
 
-假如：iPhone11 上市了
+    sadd brand:ios iPhone11
 
-```
-sadd brand:apple iPhone11
+    sad screensize:6.0-6.24 iPhone11
 
-sadd brand:ios iPhone11
+    sad screentype:lcd iPhone 11
+    ```
 
-sad screensize:6.0-6.24 iPhone11
+    赛选商品，苹果的、ios的、屏幕在6.0-6.24之间的，屏幕材质是LCD屏幕
 
-sad screentype:lcd iPhone 11
-```
+    ```
+    sinter brand:apple brand:ios screensize:6.0-6.24 screentype:lcd
+    ```
 
-赛选商品，苹果的、ios的、屏幕在6.0-6.24之间的，屏幕材质是LCD屏幕
+15. 用户关注、推荐模型
 
-```
-sinter brand:apple brand:ios screensize:6.0-6.24 screentype:lcd
-```
+    follow 关注 fans 粉丝
 
-### 15、用户关注、推荐模型
+    相互关注：
 
-follow 关注 fans 粉丝
+    - sadd 1:follow 2
+    - sadd 2:fans 1
+    - sadd 1:fans 2
+    - sadd 2:follow 1
 
-相互关注：
+    我关注的人也关注了他(取交集)：
 
-- sadd 1:follow 2
-- sadd 2:fans 1
-- sadd 1:fans 2
-- sadd 2:follow 1
+    - sinter 1:follow 2:fans
 
-我关注的人也关注了他(取交集)：
+    可能认识的人：
 
-- sinter 1:follow 2:fans
+    - 用户1可能认识的人(差集)：sdiff 2:follow 1:follow
+    - 用户2可能认识的人：sdiff 1:follow 2:follow
 
-可能认识的人：
+16. 排行榜
 
-- 用户1可能认识的人(差集)：sdiff 2:follow 1:follow
-- 用户2可能认识的人：sdiff 1:follow 2:follow
+    id 为6001 的新闻点击数加1：`zincrby hotNews:20190926 1 n6001`
 
-### 16、排行榜
+    获取今天点击最多的15条：`zrevrange hotNews:20190926 0 15 withscores`
 
-id 为6001 的新闻点击数加1：`zincrby hotNews:20190926 1 n6001`
+    ## 2.3 Redis 特性
 
-获取今天点击最多的15条：`zrevrange hotNews:20190926 0 15 withscores`
-
-## 2.3 Redis 特性
-
-1. 多样的数据类型
-2. 持久化
-3. 集群
-4. 事务
-5. ……
+    1. 多样的数据类型
+    2. 持久化
+    3. 集群
+    4. 事务
+    5. ……
 
 ## 2.4 Redis官网
 
