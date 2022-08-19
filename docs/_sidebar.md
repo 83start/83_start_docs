@@ -25,5 +25,6 @@
   * [Git常用命令](./mdPages/ReferenceDoc/Git_command.md)
   * [Git学习笔记](./mdPages/ReferenceDoc/Git_study_notes.md)
   * [Linux常用命令](./mdPages/ReferenceDoc/Linux_command.md)
+  * [Vim常用命令](./mdPages/ReferenceDoc/Vim_docs.md)
  
 
