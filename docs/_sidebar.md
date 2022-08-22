@@ -14,7 +14,8 @@
   * [Springboot 整合 SpringSecurity](./mdPages/Springboot/Springboot_SpringSecurity.md)
   
 * Vue 学习教程  
-  * [安装Vue](./mdPages/Vue/Vue_install.md)
+  * [安装Vue](./mdPages/Vue/Ch01_vue_install.md)
+  * [介绍Vue](./mdPages/Vue/Ch02_vue_info.md)
 
 * Markdown 参考文档
   * [Markdown 简明语法手册](./mdPages/Markdown/Markdown_simple_docs.md)
