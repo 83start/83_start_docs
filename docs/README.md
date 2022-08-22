@@ -29,7 +29,9 @@ npm i docsify-cli -g
 
 ![image-20220817185320118](https://83-cloud-space.oss-cn-shenzhen.aliyuncs.com/File/HaloFile/202208171853261.png)
 
-### 3.4 配置git
+### 3.4 安装git 
+
+### 3.5 github 配置 ssh
 
 
 
@@ -109,7 +111,7 @@ window.$docsify = {
 
 ### 6.2  设置github地址
 
-```bash
+```javascript
 window.$docsify = {
   repo: 'docsifyjs/docsify',
   // or
@@ -117,7 +119,157 @@ window.$docsify = {
 };
 ```
 
+### 6.3 设置最大目录级别
 
+```javascript
+window.$docsify = {
+  maxLevel: 4,
+};
+```
+
+### 6.4 加载导航栏
+
+1. 创建`_navbarm.md`文件
+
+   如果没有指定文件，则默认加载`_navbar.md` 文件
+
+2. 设置index.html文件
+
+   ```javascript
+   window.$docsify = {
+     // load from _navbar.md
+     loadNavbar: true,
+   
+     // load from nav.md
+     loadNavbar: 'nav.md',
+   };
+   ```
+
+### 6.5 加载侧边栏
+
+1. 创建`_sidebar.md`文件
+
+   如果没有指定侧边栏文件，则默认加载`_sidebar.md` 文件
+
+2. 设置index.html文件
+
+   ```javascript
+   window.$docsify = {
+     // load from _sidebar.md
+     loadSidebar: true,
+   
+     // load from summary.md
+     loadSidebar: 'summary.md',
+   };
+   ```
+
+### 6.6 完全隐藏侧边栏
+
+此选项将完全隐藏您的侧边栏，并且不会在侧面呈现任何内容。
+
+```javascript
+window.$docsify = {
+  hideSidebar: true,
+};
+```
+
+### 6.7 设置侧边栏显示的目录级别
+
+```javascript
+window.$docsify = {
+  subMaxLevel: 2,
+};
+```
+
+### 6.8 设置首页文件
+
+如果没有指定文件，默认使用`README.md`作为网站的主页。
+
+```javascript
+window.$docsify = {
+  // Change to /home.md
+  homepage: 'home.md',
+
+  // Or use the readme in your repo
+  homepage:
+    'https://raw.githubusercontent.com/docsifyjs/docsify/master/README.md',
+};
+```
+
+### 6.9 设置封面
+
+1. 创建`_coverpage.md`文件
+
+   如果没有指定封面文件，则默认加载`_coverpage.md` 作为封面文件
+
+2. 修改`index.html`文件
+
+   ```javascript
+   window.$docsify = {
+     coverpage: true,
+   
+     // Custom file name
+     coverpage: 'cover.md',
+   
+     // multiple covers
+     coverpage: ['/', '/zh-cn/'],
+   
+     // multiple covers and custom file name
+     coverpage: {
+       '/': 'cover.md',
+       '/zh-cn/': 'cover.md',
+     },
+       
+     // 设置访问主页时候仅加载封面
+       onlyCover: false,
+   };
+   ```
+
+### 6.10 设置logo
+
+```java
+window.$docsify = {
+  logo: '/_media/icon.svg',
+};
+```
+
+### 6.11 设置网站名称
+
+```javascript
+window.$docsify = {
+  name: 'docsify',
+};
+```
+
+name 字段还可以包含自定义 HTML，以便于自定义：
+
+```javascript
+window.$docsify = {
+  name: '<span>docsify</span>',
+};
+```
+
+### 6.12 设置名称链接
+
+```javascript
+window.$docsify = {
+  nameLink: '/',
+
+  // For each route
+  nameLink: {
+    '/zh-cn/': '#/zh-cn/',
+    '/': '#/',
+  },
+};
+```
+
+### 6.13 设置主题颜色
+
+```javascript
+window.$docsify = {
+  themeColor: '#3F51B5',
+};
+```
 
 
 
