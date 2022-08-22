@@ -95,7 +95,7 @@ vue -h
 ```
 
 ## VSCode Vue插件
-1. 1。Vetur —— 语法高亮、智能感知、Emmet等
+1. Vetur —— 语法高亮、智能感知、Emmet等
    包含格式化功能， Alt+Shift+F （格式化全文），Ctrl+K Ctrl+F（格式化选中代码，两个Ctrl需要同时按着）
 
 ## Vue 的项目结构
