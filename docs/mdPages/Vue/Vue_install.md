@@ -1,16 +1,44 @@
 # 安装Vue
 
-## 参考资料
+## 1 参考资料
 1. http://t.csdn.cn/AS2fx
 2. http://t.csdn.cn/sQo7s
+3. http://t.csdn.cn/nOrP7
+4. http://t.csdn.cn/g37eW
 
-## 前提条件
+## 2 前提条件
 1. 安装nodejs
 2. 修改 npm 的镜像源
 
-## html 引入 vue
+## 3 html 引入 vue
 
-## npm 管理 Vue
+### 3.1 下载js文件
+```bash
+# 开发版本：包含完整的警告和调试模式
+https://v2.cn.vuejs.org/js/vue.js
+
+
+# 测试版本：删除了警告，37.34KB min+gzip
+https://v2.cn.vuejs.org/js/vue.min.js
+```
+
+### 3.2 CDN 引入
+```bash
+# 官方推荐
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.9/dist/vue.js"></script>
+
+# BootCDN(国内，但不稳定)
+<script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+
+# unpkg：会保持和 npm 发布的最新的版本一致。（推荐使用）
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+# cdnjs
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.min.js"></script>
+
+```
+
+## 4 npm 管理 Vue
 1. npm 安装 Vue
    ```bash
    npm install vue -g
@@ -20,7 +48,7 @@
    ```bash
    npm info vue
    ```
-## npm 管理 Vue/cli 2.x
+## 5 npm 管理 Vue/cli 2.x
 1. npm 卸载 Vue/cil 2.x
 
     ```bash
@@ -48,7 +76,7 @@
     - 回车；
 
 
-## npm 管理 Vue/cli 3.x
+## 6 npm 管理 Vue/cli 3.x
 1. npm 安装 Vue/cli 3.x
 
     ```bash
@@ -85,7 +113,7 @@
    ```
 
 
-## vue 的常用命令
+## 7 vue 的常用命令
 ```bash
 # 查看 vue 版本
 vue -V
@@ -94,11 +122,11 @@ vue -V
 vue -h
 ```
 
-## VSCode Vue插件
+## 8 VSCode Vue插件
 1. Vetur —— 语法高亮、智能感知、Emmet等
    包含格式化功能， Alt+Shift+F （格式化全文），Ctrl+K Ctrl+F（格式化选中代码，两个Ctrl需要同时按着）
 
-## Vue 的项目结构
+## 9 Vue 的项目结构
 1. build：构建脚本目录
     1. build.js ==> 生产环境构建脚本；
     2. check-versions.js ==> 检查npm，node.js版本；
