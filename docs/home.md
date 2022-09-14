@@ -34,6 +34,6 @@ MySQL、Redis
 
 # License
 
-[MIT](https://github.com/83start)
+[MIT](https://github.com/83start/83_start_docs/blob/8bedd07a793394affd59a418758ccae201548e67/docs/License)
 
 Copyright (c) 2022-present 83start
